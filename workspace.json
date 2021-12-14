@@ -1,6 +1,11 @@
 {
   "version": 2,
   "projects": {
-    "api": "apps/api"
+    "admin": "apps/admin",
+    "admin-e2e": "apps/admin-e2e",
+    "api": "apps/api",
+    "client": "apps/client",
+    "client-e2e": "apps/client-e2e",
+    "ui": "libs/ui"
   }
 }
