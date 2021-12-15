@@ -6,6 +6,63 @@
     "api": "apps/api",
     "client": "apps/client",
     "client-e2e": "apps/client-e2e",
+    "model": {
+      "root": "libs/model",
+      "sourceRoot": "libs/model/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "prisma-generate": {
+          "executor": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "npx prisma generate",
+            "cwd": "libs/model"
+          }
+        },
+        "migrate-save": {
+          "executor": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "npx prisma migrate dev --create-only --preview-feature --schema ./prisma/schema.prisma",
+            "cwd": "libs/model"
+          }
+        },
+        "migrate-up": {
+          "executor": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "npx prisma migrate dev --preview-feature --schema ./prisma/schema.prisma",
+            "cwd": "libs/model"
+          }
+        },
+        "migrate-reset": {
+          "executor": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "npx prisma migrate reset --preview-feature --schema ./prisma/schema.prisma",
+            "cwd": "libs/model"
+          }
+        },
+        "migrate-deploy": {
+          "executor": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "npx prisma migrate deploy --preview-feature --schema ./prisma/schema.prisma",
+            "cwd": "libs/model"
+          }
+        },
+        "migrate-status": {
+          "executor": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "npx prisma migrate status --preview-feature --schema ./prisma/schema.prisma",
+            "cwd": "libs/model"
+          }
+        }
+      }
+    },
+
     "ui": "libs/ui"
   }
 }
