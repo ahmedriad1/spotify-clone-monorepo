@@ -1,10 +1,11 @@
-import { Button } from '@spotify-clone-monorepo/ui';
+import { Button, toast } from '@spotify-clone-monorepo/ui';
+import Layout from '../components/Layout';
 
 const Home = () => {
   return (
-    <div>
-      <Button>Hello</Button>
-    </div>
+    <Layout title="Home">
+      <Button onClick={() => toast('error', 'test')}>Hello</Button>
+    </Layout>
   );
 };
 

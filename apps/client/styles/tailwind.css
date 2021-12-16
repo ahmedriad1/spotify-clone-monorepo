@@ -1,3 +1,19 @@
 @tailwind components;
 @tailwind base;
+@layer base {
+  @font-face {
+    font-family: circular-book;
+    src: url(../assets/fonts/CircularStd-Book.otf);
+  }
+
+  @font-face {
+    font-family: circular-bold;
+    src: url(../assets/fonts/CircularStd-Bold.otf);
+  }
+
+  @font-face {
+    font-family: circular-black;
+    src: url(../assets/fonts/CircularStd-Black.otf);
+  }
+}
 @tailwind utilities;

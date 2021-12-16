@@ -33,6 +33,7 @@ export class ExceptionFilter implements GqlExceptionFilter {
         : new ApolloError(exception.message, exception.getStatus().toString());
 
     if (this.appEnvironment.isDevelopment()) error.stack = exception.stack;
+    console.log(error);
 
     throw error;
   }
