@@ -6,13 +6,13 @@ import { setToken, setRefreshToken } from '../auth';
 import { IUser } from '../types';
 
 interface IAuthStore {
-  isLoggedIn: boolean;
   user: null | IUser;
+  isLoggedIn: boolean;
+  token: string | null;
   login: (data: { user: IUser; token: string; refreshToken?: string }) => void;
   updateUser: (user: IUser) => void;
-  logout: () => void;
   refreshToken: (token: string) => void;
-  token: null | string;
+  logout: () => void;
 }
 
 let store: UseBoundStore<IAuthStore, StoreApi<IAuthStore>> | null;
@@ -25,7 +25,6 @@ const initialState = {
 
 const AuthStoreContext = createContext<IAuthStore>();
 export const AuthStoreProvider = AuthStoreContext.Provider;
-
 export const useAuthStore = AuthStoreContext.useStore;
 
 export const initializeAuthStore = (preloadedState = {}) => {
@@ -53,10 +52,11 @@ export const initializeAuthStore = (preloadedState = {}) => {
   }));
 };
 
-export function useCreateAuthStore(initialState: object) {
+export const useCreateAuthStore = (initialState: object) => {
   if (!isBrowser()) return () => initializeAuthStore(initialState);
 
   store = store || initializeAuthStore(initialState);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useLayoutEffect(() => {
     if (initialState && store) {
       store.setState({
@@ -67,6 +67,6 @@ export function useCreateAuthStore(initialState: object) {
   }, [initialState]);
 
   return () => store;
-}
+};
 
-export const getStore = () => store;
+export const getAuthStore = () => store;

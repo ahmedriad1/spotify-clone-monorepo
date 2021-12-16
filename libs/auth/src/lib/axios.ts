@@ -1,11 +1,10 @@
 import { getRefreshToken } from './auth';
-import refreshTokenMutation from './mutations/refreshTokenMutation';
-import { getStore } from './stores/useAuthStore';
+import { refreshTokenMutation } from './mutations';
+import { getAuthStore } from './stores';
 import axios, { AxiosRequestConfig } from 'axios';
 import { unstable_batchedUpdates } from 'react-dom';
 import { createRequestBody } from './functions';
 import { isBrowser } from '@spotify-clone-monorepo/utils';
-import { DocumentNode, print } from 'graphql';
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -13,7 +12,7 @@ const instance = axios.create({
 
 const logout = () => {
   unstable_batchedUpdates(() => {
-    getStore()?.getState().logout();
+    getAuthStore()?.getState().logout();
   });
 };
 
@@ -23,8 +22,9 @@ export const axiosGql = async <T>(
   config?: AxiosRequestConfig
 ): Promise<T> => {
   if (isBrowser()) {
-    const token = getStore()?.getState().token;
-    if (token) instance.defaults.headers['Authorization'] = `Bearer ${token}`;
+    const token = getAuthStore()?.getState().token;
+    if (token)
+      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }
 
   const { data } = await instance.post<{ data: T }>(
@@ -53,7 +53,7 @@ instance.interceptors.response.use(undefined, async (error) => {
 
   try {
     const { token } = await refreshTokenMutation(refreshToken);
-    if (isBrowser()) getStore()?.getState().refreshToken(token);
+    if (isBrowser()) getAuthStore()?.getState().refreshToken(token);
     config.headers['Authorization'] = `Bearer ${token}`;
     return instance.request(config);
   } catch (error) {

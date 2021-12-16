@@ -4,7 +4,7 @@ import axios from './axios';
 export const REFRESH_TOKEN_NAME = 'spotify-clone.refresh_token';
 
 export const setToken = (token: string | null) => {
-  if (!token) axios.defaults.headers.common['Authorization'] = null;
+  if (!token) axios.defaults.headers.common['Authorization'] = '';
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
 

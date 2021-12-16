@@ -1,18 +1,39 @@
-import { AppProps } from 'next/app';
-import Head from 'next/head';
+import {
+  AppGetInitialProps,
+  AuthStoreProvider,
+  MyAppProps,
+  useCreateAuthStore,
+} from '@spotify-clone-monorepo/auth';
+import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import '../styles/tailwind.css';
 
-const App = ({ Component, pageProps }: AppProps) => {
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 1800000,
+      cacheTime: 1800000,
+    },
+  },
+});
+
+const MyApp = ({ Component, pageProps, initialZustandState }: MyAppProps) => {
+  const createStore = useCreateAuthStore(initialZustandState);
+
   return (
-    <>
-      <Head>
-        <title>Welcome to admin!</title>
-      </Head>
-      <main className="app">
-        <Component {...pageProps} />
-      </main>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <AuthStoreProvider createStore={createStore}>
+        <Toaster position="top-right" reverseOrder={false} />
+        <div className="text-white">
+          <Component {...pageProps} />
+        </div>
+      </AuthStoreProvider>
+    </QueryClientProvider>
   );
 };
 
-export default App;
+MyApp.getInitialProps = AppGetInitialProps;
+
+export default MyApp;

@@ -10,7 +10,7 @@ interface IRefreshTokenResponse {
   };
 }
 
-const refreshTokenMutation = async (refreshToken: string) => {
+export const refreshTokenMutation = async (refreshToken: string) => {
   const { refreshAccessToken } = await axiosGql<IRefreshTokenResponse>(
     gql`
       mutation refreshAccessToken($token: String!) {
@@ -27,5 +27,3 @@ const refreshTokenMutation = async (refreshToken: string) => {
 
   return refreshAccessToken;
 };
-
-export default refreshTokenMutation;

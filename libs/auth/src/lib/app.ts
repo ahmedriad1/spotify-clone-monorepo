@@ -1,8 +1,9 @@
 import { isBrowser } from '@spotify-clone-monorepo/utils';
 import App, { AppContext, AppProps } from 'next/app';
+import { NextApiRequest } from 'next/types';
 import { REFRESH_TOKEN_NAME } from './auth';
-import refreshTokenMutation from './mutations/refreshTokenMutation';
-import { initializeAuthStore } from './stores/useAuthStore';
+import { refreshTokenMutation } from './mutations';
+import { initializeAuthStore } from './stores';
 
 export const AppGetInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext);
@@ -11,7 +12,7 @@ export const AppGetInitialProps = async (appContext: AppContext) => {
 
   const store = initializeAuthStore();
 
-  const request: any = appContext.ctx.req;
+  const request = appContext.ctx.req as NextApiRequest;
 
   const refreshToken = request ? request.cookies[REFRESH_TOKEN_NAME] : null;
 
@@ -21,7 +22,7 @@ export const AppGetInitialProps = async (appContext: AppContext) => {
 
       store.getState().login({ user: { name, email }, token });
     } catch (error) {
-      request.cookies[REFRESH_TOKEN_NAME] = null;
+      delete request.cookies[REFRESH_TOKEN_NAME];
     }
   }
 

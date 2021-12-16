@@ -19,6 +19,7 @@
       "executor": "@nrwl/next:server",
       "options": {
         "buildTarget": "admin:build",
+        "port": 4201,
         "dev": true
       },
       "configurations": {

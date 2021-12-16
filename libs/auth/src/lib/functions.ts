@@ -4,7 +4,6 @@ import {
   ExtractableFile,
 } from 'extract-files';
 import FormDataNode from 'form-data';
-import { DocumentNode } from 'graphql';
 
 const isExtractableFileEnhanced = (
   value: any
