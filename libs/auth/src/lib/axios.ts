@@ -1,7 +1,7 @@
 import { getRefreshToken } from './auth';
 import { refreshTokenMutation } from './mutations';
 import { getAuthStore } from './stores';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { unstable_batchedUpdates } from 'react-dom';
 import { createRequestBody } from './functions';
 import { isBrowser } from '@spotify-clone-monorepo/utils';
@@ -61,5 +61,12 @@ instance.interceptors.response.use(undefined, async (error) => {
     return Promise.reject('Logged out');
   }
 });
+
+export type IGraphQLError = AxiosError<{
+  errors: {
+    message: string;
+    extensions: { code: string };
+  }[];
+}>;
 
 export default instance;

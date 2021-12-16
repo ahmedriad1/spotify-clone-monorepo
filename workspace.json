@@ -29,6 +29,29 @@
     },
     "client": "apps/client",
     "client-e2e": "apps/client-e2e",
+    "data-admin": {
+      "root": "libs/data-admin",
+      "sourceRoot": "libs/data-admin/src",
+      "projectType": "library",
+      "tags": [],
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/data-admin/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/data-admin"],
+          "options": {
+            "jestConfig": "libs/data-admin/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "model": {
       "root": "libs/model",
       "sourceRoot": "libs/model/src",
