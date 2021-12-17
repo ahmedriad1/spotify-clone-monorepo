@@ -13,7 +13,7 @@ const useAddArtist = () => {
     (data) =>
       axiosGql(
         gql`
-          mutation createArtist($data: ArtistCreateInput!) {
+          mutation createArtist($data: CreateArtistInput!) {
             createArtist(data: $data) {
               id
               name
@@ -25,11 +25,6 @@ const useAddArtist = () => {
     {
       onSuccess: () => {
         toast('success', 'Artist created');
-      },
-      onError: (error) => {
-        const msg =
-          error?.response?.data?.errors[0]?.message || 'An error occurred';
-        toast('error', msg);
       },
     }
   );

@@ -15,5 +15,10 @@
     font-family: circular-black;
     src: url(../assets/fonts/CircularStd-Black.otf);
   }
+
+  @font-face {
+    font-family: circular-medium;
+    src: url(../assets/fonts/CircularStd-Medium.otf);
+  }
 }
 @tailwind utilities;

@@ -85,7 +85,7 @@ const ShowAlbums = () => {
   return (
     <Layout title="View Albums">
       <div className="flex justify-between items-center mb-8">
-        <h2>Show Albums</h2>
+        <h2 className="text-4xl">Show Albums</h2>
         <Link href="/albums/add">
           <a>
             <PlusButton />

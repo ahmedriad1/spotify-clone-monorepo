@@ -21,7 +21,7 @@ const AddGenres = () => {
 
   return (
     <Layout title="Add Genres">
-      <h2 className="mb-8">Add Genres</h2>
+      <h2 className="text-4xl mb-8">Add Genres</h2>
       <div className="mt-5 md:mt-0 md:col-span-2">
         <Form onSubmit={handleSubmit} schema={schema}>
           <div className="py-5 space-y-6 sm:py-6">

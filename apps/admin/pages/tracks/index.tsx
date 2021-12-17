@@ -68,7 +68,7 @@ const ShowTracks = () => {
   return (
     <Layout title="View Tracks">
       <div className="flex justify-between items-center mb-8">
-        <h2>Show Tracks</h2>
+        <h2 className="text-4xl">Show Tracks</h2>
         <Link href="/admin/tracks/add">
           <a>
             <PlusButton />

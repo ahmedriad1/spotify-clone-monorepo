@@ -1,6 +1,6 @@
-import { AsyncSelectProps } from '@spotify-clone-monorepo/data-admin';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { SELECT_STYLES } from '../constants';
+import { AsyncSelectProps } from '../types';
 import ConnectForm from './ConnectForm';
 import InputErrorMsg from './InputErrorMsg';
 import IsolateRerender from './IsolateRerender';

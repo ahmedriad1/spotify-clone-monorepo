@@ -26,11 +26,6 @@ const useAddGenre = () => {
       onSuccess: () => {
         toast('success', 'Genre created');
       },
-      onError: (error) => {
-        const msg =
-          error?.response?.data?.errors[0]?.message || 'An error occurred';
-        toast('error', msg);
-      },
     }
   );
 };

@@ -34,7 +34,7 @@ const AddArtists = () => {
 
   return (
     <Layout title="Add Artists">
-      <h2 className="mb-8">Add Artists</h2>
+      <h2 className="mb-8 text-4xl">Add Artists</h2>
       <div className="mt-5 md:mt-0 md:col-span-2">
         <Form onSubmit={handleSubmit} schema={schema}>
           <div className="py-5 space-y-6 sm:py-6">

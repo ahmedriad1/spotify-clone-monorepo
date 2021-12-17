@@ -1,6 +1,6 @@
-import { SelectProps } from '@spotify-clone-monorepo/data-admin';
 import BaseSelect from 'react-select';
 import { SELECT_STYLES } from '../constants';
+import { SelectProps } from '../types';
 import ConnectForm from './ConnectForm';
 import InputErrorMsg from './InputErrorMsg';
 import IsolateRerender from './IsolateRerender';

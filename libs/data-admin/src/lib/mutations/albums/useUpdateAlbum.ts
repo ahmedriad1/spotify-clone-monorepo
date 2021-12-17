@@ -38,11 +38,6 @@ const useUpdateAlbum = () => {
       onSuccess: () => {
         toast('success', 'Album updated');
       },
-      onError: (error) => {
-        const msg =
-          error?.response?.data?.errors[0]?.message || 'An error occurred';
-        toast('error', msg);
-      },
     }
   );
 };

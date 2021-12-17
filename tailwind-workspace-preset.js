@@ -1,4 +1,7 @@
+const { join } = require('path');
+
 module.exports = {
+  content: [join(__dirname, 'libs/ui/src/**/*.{js,ts,jsx,tsx}')],
   theme: {
     extend: {
       colors: {
@@ -12,8 +15,9 @@ module.exports = {
       },
       fontFamily: {
         'circular-black': ['circular-black'],
-        'circular-book': ['circular-black'],
-        'circular-bold': ['circular-black'],
+        'circular-book': ['circular-book'],
+        'circular-bold': ['circular-bold'],
+        'circular-medium': ['circular-medium'],
       },
     },
   },

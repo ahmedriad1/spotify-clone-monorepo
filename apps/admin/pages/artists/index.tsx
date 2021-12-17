@@ -62,7 +62,7 @@ const ShowArtists = () => {
   return (
     <Layout title="View Artists">
       <div className="flex justify-between items-center mb-8">
-        <h2>Show Artists</h2>
+        <h2 className="text-4xl">Show Artists</h2>
         <Link href="/artists/add">
           <a>
             <PlusButton />

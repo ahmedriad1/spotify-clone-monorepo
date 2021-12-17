@@ -1,5 +1,6 @@
 {
-  "[typescriptreact]": {
-    "editor.snippetSuggestions": "bottom"
-  }
+  "editor.snippetSuggestions": "bottom",
+  "prettier.singleQuote": true,
+  "prettier.jsxSingleQuote": true,
+  "typescript.preferences.quoteStyle": "single"
 }

@@ -35,7 +35,7 @@ const ShowGenres = () => {
   return (
     <Layout title="View Genres">
       <div className="flex justify-between items-center mb-8">
-        <h2>Show Genres</h2>
+        <h2 className="text-4xl">Show Genres</h2>
         <Link href="/genres/add">
           <a>
             <PlusButton />

@@ -1,9 +1,9 @@
-import { AsyncMultiselectProps } from '@spotify-clone-monorepo/data-admin';
 import ConnectForm from './ConnectForm';
 import IsolateRerender from './IsolateRerender';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import InputErrorMsg from './InputErrorMsg';
 import { MULTISELECT_STYLES } from '../constants';
+import { AsyncMultiselectProps } from '../types';
 
 const MultiselectAutoComplete: React.FC<AsyncMultiselectProps> = ({
   name,

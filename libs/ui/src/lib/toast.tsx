@@ -1,7 +1,13 @@
 import { Transition } from '@headlessui/react';
+import { IGraphQLError } from '@spotify-clone-monorepo/auth';
 import { toast as makeToast } from 'react-hot-toast';
 
-const toast = (type: 'error' | 'success', message: string) => {
+const toast = (type: 'error' | 'success', message: string | IGraphQLError) => {
+  const err =
+    typeof message === 'string'
+      ? message
+      : message?.response?.data?.errors[0]?.message || 'An error occurred';
+
   return makeToast.custom(
     (t) => (
       <div className="max-w-md w-full text-white">
@@ -39,7 +45,7 @@ const toast = (type: 'error' | 'success', message: string) => {
                   )}
                 </svg>
 
-                {message}
+                {err}
               </div>
             </div>
             <div className="flex border-l border-[#121212]">

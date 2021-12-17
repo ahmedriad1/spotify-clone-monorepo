@@ -37,9 +37,6 @@ const useAddAlbum = () => {
       onSuccess: () => {
         toast('success', 'Album created');
       },
-      onError: (error) => {
-        toast('error', JSON.stringify(error));
-      },
     }
   );
 

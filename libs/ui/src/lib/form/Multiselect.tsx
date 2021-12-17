@@ -1,6 +1,6 @@
-import { MultiselectProps } from '@spotify-clone-monorepo/data-admin';
 import Select from 'react-select';
 import { MULTISELECT_STYLES } from '../constants';
+import { MultiselectProps } from '../types';
 import ConnectForm from './ConnectForm';
 import InputErrorMsg from './InputErrorMsg';
 import IsolateRerender from './IsolateRerender';
