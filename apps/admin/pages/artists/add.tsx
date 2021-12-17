@@ -1,14 +1,18 @@
-import * as yup from 'yup';
-import Layout from '@/components/Layout';
-import Form from '@/components/Form';
+import { withAuth } from '@spotify-clone-monorepo/auth';
+import {
+  createPaginatedLoader,
+  searchUsers,
+  useAddArtist,
+} from '@spotify-clone-monorepo/data-admin';
+import {
+  Button,
+  Form,
+  Input,
+  SelectAutocomplete,
+} from '@spotify-clone-monorepo/ui';
 import { useRouter } from 'next/router';
-import Button from '@/components/Button';
-import FormInput from '@/components/Form/FormInput';
-import withAuth from '@/helpers/withAuth';
-import { createPaginatedLoader } from '@/helpers/functions';
-import searchUsers, { ISelectUser } from '@/queries/users/searchUsers';
-import useAddArtist from '@/mutations/artists/useAddArtist';
-import FormSelectAutoComplete from '@/components/Form/FormSelectAutocomplete';
+import * as yup from 'yup';
+import Layout from '../../components/Layout';
 
 const AddArtists = () => {
   const router = useRouter();
@@ -22,50 +26,56 @@ const AddArtists = () => {
     }),
   });
 
-  const handleSubmit = async input => {
+  const handleSubmit = async (input) => {
     const { name, user } = input;
     await mutation.mutateAsync({ name, user: { id: user.value } });
     router.push('/artists');
   };
 
   return (
-    <Layout title='Add Artists'>
-      <h2 className='mb-8'>Add Artists</h2>
-      <div className='mt-5 md:mt-0 md:col-span-2'>
+    <Layout title="Add Artists">
+      <h2 className="mb-8">Add Artists</h2>
+      <div className="mt-5 md:mt-0 md:col-span-2">
         <Form onSubmit={handleSubmit} schema={schema}>
-          <div className='py-5 space-y-6 sm:py-6'>
-            <div className='grid grid-cols-3 gap-6'>
-              <div className='col-span-3 sm:col-span-2'>
-                <label htmlFor='name' className='block text-sm font-medium text-white'>
+          <div className="py-5 space-y-6 sm:py-6">
+            <div className="grid grid-cols-3 gap-6">
+              <div className="col-span-3 sm:col-span-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-white"
+                >
                   Name
                 </label>
 
-                <FormInput name='name' type='text' placeholder='Artist Name' />
+                <Input name="name" type="text" placeholder="Artist Name" />
               </div>
             </div>
 
-            <div className='grid grid-cols-3 gap-6'>
-              <div className='col-span-3 sm:col-span-2'>
-                <label htmlFor='user' className='block text-sm font-medium text-white'>
+            <div className="grid grid-cols-3 gap-6">
+              <div className="col-span-3 sm:col-span-2">
+                <label
+                  htmlFor="user"
+                  className="block text-sm font-medium text-white"
+                >
                   User
                 </label>
 
-                <FormSelectAutoComplete
+                <SelectAutocomplete
                   loadOptions={createPaginatedLoader(searchUsers, {
                     total: 'totalUsers',
                     all: 'users',
-                    mapOptions: (user: ISelectUser) => ({
+                    mapOptions: (user: any) => ({
                       label: user.email,
                       value: user.id,
                     }),
                   })}
-                  name='user'
+                  name="user"
                 />
               </div>
             </div>
           </div>
 
-          <div className='my-2'>
+          <div className="my-2">
             <Button loading={mutation.isLoading}>Add</Button>
           </div>
         </Form>

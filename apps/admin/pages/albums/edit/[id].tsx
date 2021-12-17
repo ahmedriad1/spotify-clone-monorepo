@@ -7,8 +7,16 @@ import {
   useAlbum,
   useUpdateAlbum,
   IUpdateAlbumData,
+  createPaginatedLoader,
 } from '@spotify-clone-monorepo/data-admin';
-import { Button, Form, Input } from '@spotify-clone-monorepo/ui';
+import {
+  Button,
+  FileUpload,
+  Form,
+  Input,
+  MultiselectAutocomplete,
+  SelectAutocomplete,
+} from '@spotify-clone-monorepo/ui';
 import { withAuth } from '@spotify-clone-monorepo/auth';
 import { PhotographIcon } from '@heroicons/react/outline';
 
@@ -103,7 +111,7 @@ const EditAlbums = () => {
                   Artists
                 </label>
 
-                <FormMultiselectAutoComplete
+                <MultiselectAutocomplete
                   name="artists"
                   loadOptions={createPaginatedLoader(searchArtists, {
                     total: 'totalArtists',
@@ -126,7 +134,7 @@ const EditAlbums = () => {
                   Image
                 </label>
 
-                <FormFileUpload
+                <FileUpload
                   name="image"
                   label="Upload an image"
                   icon={
@@ -145,7 +153,7 @@ const EditAlbums = () => {
                 >
                   Genre
                 </label>
-                <FormSelectAutoComplete
+                <SelectAutocomplete
                   name="genre"
                   loadOptions={createPaginatedLoader(searchGenres, {
                     total: 'totalGenres',

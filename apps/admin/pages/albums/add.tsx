@@ -1,13 +1,23 @@
 import * as yup from 'yup';
 import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
-import { Form, Input, Button } from '@spotify-clone-monorepo/ui';
+import {
+  Form,
+  Input,
+  Button,
+  MultiselectAutocomplete,
+  SelectAutocomplete,
+  Progress,
+  Select,
+  FileUpload,
+} from '@spotify-clone-monorepo/ui';
 import { withAuth } from '@spotify-clone-monorepo/auth';
 import {
   useAddAlbum,
   IAddAlbumData,
   searchArtists,
   searchGenres,
+  createPaginatedLoader,
 } from '@spotify-clone-monorepo/data-admin';
 import { PhotographIcon } from '@heroicons/react/outline';
 
@@ -108,7 +118,7 @@ const AddAlbums = () => {
                   Artists
                 </label>
 
-                <FormMultiselectAutoComplete
+                <MultiselectAutocomplete
                   loadOptions={createPaginatedLoader(searchArtists, {
                     total: 'totalArtists',
                     all: 'artists',
@@ -127,7 +137,7 @@ const AddAlbums = () => {
                   Image
                 </label>
 
-                <FormFileUpload
+                <FileUpload
                   name="image"
                   label="Upload an image"
                   icon={
@@ -145,7 +155,7 @@ const AddAlbums = () => {
                 >
                   Genre
                 </label>
-                <FormSelectAutoComplete
+                <SelectAutocomplete
                   name="genre"
                   loadOptions={createPaginatedLoader(searchGenres, {
                     total: 'totalGenres',
@@ -163,7 +173,7 @@ const AddAlbums = () => {
                 >
                   Album Type
                 </label>
-                <FormSelect
+                <Select
                   name="type"
                   options={[
                     { label: 'Album', value: 'ALBUM' },
@@ -176,7 +186,7 @@ const AddAlbums = () => {
             {completed !== null && (
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3 sm:col-span-2">
-                  <ProgressBar progress={completed} />
+                  <Progress value={completed} />
                 </div>
               </div>
             )}
