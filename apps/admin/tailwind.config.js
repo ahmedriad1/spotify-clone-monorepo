@@ -5,7 +5,6 @@ const preset = require('../../tailwind-workspace-preset.js');
 module.exports = {
   presets: [preset],
   content: [
-    ...preset.content,
     join(__dirname, 'pages/**/*.{js,ts,jsx,tsx}'),
     join(__dirname, 'components/**/*.{js,ts,jsx,tsx}'),
     ...createGlobPatternsForDependencies(__dirname),

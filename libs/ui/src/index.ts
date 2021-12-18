@@ -13,6 +13,8 @@ import RoundedButton from './lib/RoundedButton';
 import PlusButton from './lib/PlusButton';
 import Table from './lib/Table';
 import Progress from './lib/Progress';
+import Navlink from './lib/Navlink';
+import BackButton from './lib/BackButton';
 
 export {
   LazyImage,
@@ -29,5 +31,7 @@ export {
   RoundedButton,
   PlusButton,
   Table,
+  Navlink,
+  BackButton,
   toast,
 };

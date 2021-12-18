@@ -5,29 +5,26 @@ import {
   HomeIcon,
   MicrophoneIcon,
 } from '@heroicons/react/outline';
-import { LazyImage } from '@spotify-clone-monorepo/ui';
+import { LazyImage, Navlink } from '@spotify-clone-monorepo/ui';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
-const SidebarItem: React.FC<{ to: string; exact?: boolean }> = ({
-  to,
-  exact = false,
+const SidebarItem: React.FC<{ href: string; exact?: boolean }> = ({
+  href,
+  exact,
   children,
 }) => {
-  const router = useRouter();
-  const active = exact
-    ? router.pathname === to
-    : router.pathname.startsWith(to);
   return (
-    <Link href={to}>
-      <a
-        className={`w-full hover:bg-sp-green flex justify-center items-center py-6 transition-colors duration-75 ease-in ${
-          active ? 'bg-sp-green' : ''
-        }`}
-      >
-        {children}
-      </a>
-    </Link>
+    <Navlink href={href} exact={exact}>
+      {({ active }) => (
+        <a
+          className={`w-full hover:bg-sp-green flex justify-center items-center py-6 transition-colors duration-75 ease-in ${
+            active ? 'bg-sp-green' : ''
+          }`}
+        >
+          {children}
+        </a>
+      )}
+    </Navlink>
   );
 };
 
@@ -46,23 +43,23 @@ const Sidebar = () => {
         </a>
       </Link>
 
-      <SidebarItem to="/" exact>
+      <SidebarItem href="/" exact>
         <HomeIcon className="w-6 h-6" />
       </SidebarItem>
 
-      <SidebarItem to="/albums">
+      <SidebarItem href="/albums">
         <ArchiveIcon className="w-6 h-6" />
       </SidebarItem>
 
-      <SidebarItem to="/genres">
+      <SidebarItem href="/genres">
         <CollectionIcon className="w-6 h-6" />
       </SidebarItem>
 
-      <SidebarItem to="/tracks">
+      <SidebarItem href="/tracks">
         <MusicNoteIcon className="w-6 h-6" />
       </SidebarItem>
 
-      <SidebarItem to="/artists">
+      <SidebarItem href="/artists">
         <MicrophoneIcon className="w-6 h-6" />
       </SidebarItem>
 

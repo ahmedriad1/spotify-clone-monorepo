@@ -1,10 +1,8 @@
 import Link from 'next/link';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
-import { useRouter } from 'next/router';
-import { ChevronLeftIcon } from '@heroicons/react/outline';
 import { useAuthStore } from '@spotify-clone-monorepo/auth';
-import { LazyImage, toast } from '@spotify-clone-monorepo/ui';
+import { BackButton, LazyImage, toast } from '@spotify-clone-monorepo/ui';
 
 const ProfileDropdown = () => {
   const setLogout = useAuthStore((state) => state.logout);
@@ -77,7 +75,6 @@ const ProfileDropdown = () => {
 const Nav = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { isLoggedIn, user, logout: setLogout } = useAuthStore();
-  const router = useRouter();
 
   const logout = (e) => {
     e.preventDefault();
@@ -85,36 +82,12 @@ const Nav = () => {
     toast('success', 'Logged out !');
   };
 
-  const goBack = () => {
-    if (
-      window.history.length > 1 &&
-      document.referrer.indexOf(window.location.host) !== -1
-    )
-      router.back();
-    else router.replace('/');
-  };
-
   return (
     <nav className="fixed bg-[rgba(9,9,9,0.78)] bg-opacity-50 w-[calc(100%-64px)] z-[999]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <button
-              className="text-white w-10 h-10 rounded-full bg-black flex items-center justify-center cursor-pointer sp-ring disabled:cursor-not-allowed"
-              // disabled={router history.length <= 1}
-              onClick={goBack}
-            >
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            {/* <div className='flex-shrink-0'>
-              <LazyImage
-                src='/logo.svg'
-                width={32}
-                height={32}
-                className='h-8 w-8'
-                alt='Logo'
-              />
-            </div> */}
+            <BackButton />
           </div>
           <div className="hidden md:block">
             {isLoggedIn ? (

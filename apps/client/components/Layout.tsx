@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ title, innerStyle, children }) => {
         <title>Spotify | {title}</title>
       </Head>
       <main
-        className="w-full min-h-screen grid grid-cols-[auto,1fr] grid-rows-[1fr,auto] overflow-hidden"
+        className="w-full min-h-screen grid grid-cols-[auto,1fr] grid-rows-[1fr,auto] overflow-hidden font-circular-medium"
         style={{
           gridTemplateAreas:
             "'side-bar main-view buddy-feed' 'now-playing-bar now-playing-bar now-playing-bar'",

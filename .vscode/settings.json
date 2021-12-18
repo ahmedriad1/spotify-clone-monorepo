@@ -2,5 +2,13 @@
   "editor.snippetSuggestions": "bottom",
   "prettier.singleQuote": true,
   "prettier.jsxSingleQuote": true,
-  "typescript.preferences.quoteStyle": "single"
+  "typescript.preferences.quoteStyle": "single",
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.alwaysShowStatus": true
 }

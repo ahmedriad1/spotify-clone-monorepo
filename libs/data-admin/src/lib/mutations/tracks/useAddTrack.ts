@@ -4,29 +4,28 @@ import { axiosGql, IGraphQLError } from '@spotify-clone-monorepo/auth';
 import { gql } from '@spotify-clone-monorepo/utils';
 import { toast } from '@spotify-clone-monorepo/ui';
 
-export interface IAddAlbumData {
+export interface IAddTrackData {
   name: string;
-  description: string;
   genreId: string;
-  type: 'ALBUM' | 'SINGLE';
-  image: File;
+  albumId: string;
   artists: string[];
+  trackFile: File;
 }
 
-const useAddAlbum = () => {
+const useAddTrack = () => {
   const [completed, setCompleted] = useState<number | null>(null);
-  const data = useMutation<unknown, IGraphQLError, IAddAlbumData>(
-    ({ image, ...rest }) =>
+  const data = useMutation<unknown, IGraphQLError, IAddTrackData>(
+    ({ trackFile, ...rest }) =>
       axiosGql(
         gql`
-          mutation createAlbum($data: CreateAlbumInput!, $image: Upload!) {
-            createAlbum(data: $data, image: $image) {
+          mutation createTrack($data: CreateTrackInput!, $trackFile: Upload!) {
+            createTrack(data: $data, trackFile: $trackFile) {
               id
               name
             }
           }
         `,
-        { data: rest, image },
+        { data: rest, trackFile },
         {
           onUploadProgress: (progress) => {
             setCompleted(Math.round((progress.loaded * 100) / progress.total));
@@ -35,7 +34,7 @@ const useAddAlbum = () => {
       ),
     {
       onSuccess: () => {
-        toast('success', 'Album created');
+        toast('success', 'Track created');
       },
     }
   );
@@ -43,4 +42,4 @@ const useAddAlbum = () => {
   return { completed, ...data };
 };
 
-export default useAddAlbum;
+export default useAddTrack;

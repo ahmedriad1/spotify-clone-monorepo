@@ -1,8 +1,8 @@
 import { CSSProperties, Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { useRouter } from 'next/router';
 import { useAuthStore } from '@spotify-clone-monorepo/auth';
 import Link from 'next/link';
+import { BackButton } from '@spotify-clone-monorepo/ui';
 
 interface NavProps {
   styles?: CSSProperties;
@@ -10,7 +10,6 @@ interface NavProps {
 
 const Nav: React.FC<NavProps> = ({ styles }) => {
   const [scrolled, setScrolled] = useState(false);
-  const router = useRouter();
 
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const user = useAuthStore((state) => state.user);
@@ -29,15 +28,6 @@ const Nav: React.FC<NavProps> = ({ styles }) => {
     };
   }, []);
 
-  const goBack = () => {
-    if (
-      window.history.length > 1 &&
-      document.referrer.indexOf(window.location.host) !== -1
-    )
-      router.back();
-    else router.replace('/');
-  };
-
   return (
     <div className="h-[60px] w-full sticky z-10 [grid-area:main-view]">
       <div
@@ -46,17 +36,7 @@ const Nav: React.FC<NavProps> = ({ styles }) => {
         } h-full w-full text-white py-2 px-4 transition-colors duration-300 ease-in-out flex items-center justify-between lg:px-8`}
         style={styles}
       >
-        <button
-          className="text-white w-10 h-10 rounded-full bg-black flex items-center justify-center cursor-pointer sp-ring disabled:cursor-not-allowed"
-          onClick={goBack}
-        >
-          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-            <path
-              fill="currentColor"
-              d="M15.54 21.15L5.095 12.23 15.54 3.31l.65.76-9.555 8.16 9.555 8.16"
-            />
-          </svg>
-        </button>
+        <BackButton />
 
         {!isLoggedIn ? (
           <div>

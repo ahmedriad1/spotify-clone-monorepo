@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import { useCallback, useEffect } from 'react';
 import { usePagination, useTable, Column } from 'react-table';
+import { LoadingIcon } from './Icons';
 
 declare module 'react-table' {
-  // take this file as-is, or comment out the sections that don't apply to your plugin configuration
-
   interface TableOptions<D extends object>
     extends UseExpandedOptions<D>,
       UseFiltersOptions<D>,
@@ -104,7 +103,7 @@ function Table<T extends object>({
       columns,
       data,
       defaultColumn: {
-        Cell: ({ value }: { value: any }) => (
+        Cell: ({ value }: { value: string }) => (
           <span className="text-[rgba(255,255,255,0.6)] text-sm">{value}</span>
         ),
       },
@@ -125,11 +124,10 @@ function Table<T extends object>({
   return (
     <>
       <div className="flex flex-col">
-        {loading && <p>Loading...</p>}
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-black sm:rounded-md">
-              <table className="min-w-full" {...getTableProps()}>
+              <table className="min-w-full relative" {...getTableProps()}>
                 <thead className="bg-sp-green">
                   <tr>
                     {flatHeaders.map((column) => (
@@ -159,7 +157,7 @@ function Table<T extends object>({
                   ))} */}
                   </tr>
                 </thead>
-                {!loading && (
+                {!loading ? (
                   <tbody className="bg-black" {...getTableBodyProps()}>
                     {page.map((row, i) => {
                       prepareRow(row);
@@ -194,6 +192,12 @@ function Table<T extends object>({
                         </tr>
                       );
                     })}
+                  </tbody>
+                ) : (
+                  <tbody className="h-80">
+                    <div className="w-full h-full absolute top-0 left-0 bg-black/50 flex justify-center items-center">
+                      <LoadingIcon className="w-10 h-10 text-white" />
+                    </div>
                   </tbody>
                 )}
               </table>

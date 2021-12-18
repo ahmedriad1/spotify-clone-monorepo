@@ -1,3 +1,4 @@
+import { XCircleIcon } from '@heroicons/react/outline';
 import { forwardRef } from 'react';
 import ConnectForm from './ConnectForm';
 import InputErrorMsg from './InputErrorMsg';
@@ -41,10 +42,7 @@ const BaseFileUpload: React.FC<BaseFileUploadProps> = forwardRef<
 
 interface FileUploadProps {
   name: string;
-  preview?: (
-    value: unknown,
-    options: { clear: () => void }
-  ) => React.ReactElement;
+  preview?: (value: File, options: { clear: () => void }) => React.ReactElement;
   defaultValue?: unknown;
   label: string;
   icon: React.ReactNode;
@@ -64,21 +62,23 @@ const FileUpload: React.FC<FileUploadProps> = ({
       {({ register, setValue, formState: { errors } }) => (
         <>
           <IsolateRerender fieldToWatch={name} defaultValue={defaultValue}>
-            {({ [name]: file }) =>
-              file && (file as FileList)[0] && !errors[name] ? (
+            {({ [name]: file }) => {
+              const clear = () =>
+                file
+                  ? setValue(name, null, {
+                      shouldDirty: true,
+                    })
+                  : undefined;
+              const fileList = file as FileList;
+              return file && fileList[0] && !errors[name] ? (
                 preview ? (
-                  preview(file, {
-                    clear: () =>
-                      file
-                        ? setValue(name, null, {
-                            shouldDirty: true,
-                          })
-                        : null,
+                  preview(fileList[0], {
+                    clear,
                   })
                 ) : (
                   <div className="w-[200px] h-[200px] mt-1 relative group">
                     <img
-                      src={getFileSrc(file as FileList)}
+                      src={getFileSrc(fileList)}
                       className="w-full h-full object-cover"
                       alt="Preview"
                     />
@@ -86,36 +86,17 @@ const FileUpload: React.FC<FileUploadProps> = ({
                       <button
                         className="text-white h-10 w-10"
                         type="button"
-                        onClick={() =>
-                          file
-                            ? setValue(name, null, {
-                                shouldDirty: true,
-                              })
-                            : null
-                        }
+                        onClick={clear}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-full w-full"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1}
-                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
+                        <XCircleIcon className="h-full w-full" />
                       </button>
                     </div>
                   </div>
                 )
               ) : (
                 <BaseFileUpload id={name} {...register(name)} {...props} />
-              )
-            }
+              );
+            }}
           </IsolateRerender>
           <InputErrorMsg error={errors[name]} />
         </>
