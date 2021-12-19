@@ -4,6 +4,7 @@ import { Column } from 'react-table';
 import { Track, useTracks } from '@spotify-clone-monorepo/data-admin';
 import { LazyImage, PlusButton, Table } from '@spotify-clone-monorepo/ui';
 import { withAuth } from '@spotify-clone-monorepo/auth';
+import PrettyMs from 'pretty-ms';
 import Layout from '../../components/Layout';
 
 const columns: Column<Track>[] = [
@@ -52,7 +53,12 @@ const columns: Column<Track>[] = [
   {
     Header: 'Duration',
     accessor: 'duration',
-    Cell: ({ value }) => value,
+    Cell: ({ value }) =>
+      PrettyMs(value, {
+        colonNotation: true,
+        secondsDecimalDigits: 0,
+        millisecondsDecimalDigits: 0,
+      }),
   },
   {
     Header: 'Likes',

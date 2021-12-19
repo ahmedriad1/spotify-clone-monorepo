@@ -35,3 +35,4 @@ export {
   BackButton,
   toast,
 };
+export * from './lib/Icons';

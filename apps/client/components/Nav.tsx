@@ -6,35 +6,26 @@ import { BackButton } from '@spotify-clone-monorepo/ui';
 
 interface NavProps {
   styles?: CSSProperties;
+  scrolledStyles?: CSSProperties;
+  scrolled: boolean;
 }
 
-const Nav: React.FC<NavProps> = ({ styles }) => {
-  const [scrolled, setScrolled] = useState(false);
-
+const Nav: React.FC<NavProps> = ({ styles, scrolledStyles, scrolled }) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.pageYOffset >= 40) setScrolled(false);
-      else setScrolled(true);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   return (
     <div className="h-[60px] w-full sticky z-10 [grid-area:main-view]">
       <div
         className={`${
-          scrolled ? 'bg-[rgba(9,9,9,0.78)]' : 'bg-transparent'
+          scrolled
+            ? scrolledStyles
+              ? ''
+              : 'bg-[rgba(9,9,9,0.78)]'
+            : 'bg-transparent'
         } h-full w-full text-white py-2 px-4 transition-colors duration-300 ease-in-out flex items-center justify-between lg:px-8`}
-        style={styles}
+        style={{ ...styles, ...(scrolled ? scrolledStyles : {}) }}
       >
         <BackButton />
 

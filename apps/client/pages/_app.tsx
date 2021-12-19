@@ -7,6 +7,7 @@ import {
 // import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import Player from '../components/Player';
 import '../styles/tailwind.css';
 
 const queryClient = new QueryClient({
@@ -27,9 +28,17 @@ const MyApp = ({ Component, pageProps, initialZustandState }: MyAppProps) => {
     <QueryClientProvider client={queryClient}>
       <AuthStoreProvider createStore={createStore}>
         <Toaster position="top-right" reverseOrder={false} />
-        <div className="text-white">
+
+        <main
+          className="w-full h-screen grid grid-cols-[auto,1fr] grid-rows-[1fr,auto] overflow-hidden font-circular-medium text-white"
+          style={{
+            gridTemplateAreas:
+              "'side-bar main-view buddy-feed' 'now-playing-bar now-playing-bar now-playing-bar'",
+          }}
+        >
           <Component {...pageProps} />
-        </div>
+          <Player />
+        </main>
       </AuthStoreProvider>
     </QueryClientProvider>
   );

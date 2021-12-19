@@ -9,7 +9,7 @@ const Layout: React.FC<{ title?: string }> = ({
   return (
     <>
       <Head>
-        <title>Spotify Clone | {title}</title>
+        <title>Spotify Admin | {title}</title>
         <link rel="icon" href="/logo-main.png" />
       </Head>
 
