@@ -16,8 +16,9 @@ const useIsAlbumLiked = (id: string | null) => {
   return useQuery<boolean>(['isAlbumLiked', id], async () => {
     if (!id) return;
 
-    if (queryClient.getQueryData(['isAlbumLiked', id]) !== undefined)
-      return queryClient.getQueryData<boolean>(['isAlbumLiked', id]);
+    const isLiked = queryClient.getQueryData<boolean>(['isAlbumLiked', id]);
+
+    if (typeof isLiked === 'boolean') return isLiked;
 
     const { albumLikesContain } = await axiosGql<{
       albumLikesContain: { id: string; liked: boolean }[];

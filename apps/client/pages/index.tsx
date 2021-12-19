@@ -1,5 +1,6 @@
 import CardSection from '../components/CardSection';
 import Layout from '../components/Layout';
+import Loading from '../components/Loading';
 import useGenresAlbums from '../hooks/useGenresAlbums';
 
 const Home = () => {
@@ -8,7 +9,7 @@ const Home = () => {
   return (
     <Layout title="Home">
       {isLoading ? (
-        <h1>Loading....</h1>
+        <Loading />
       ) : (
         <div className="space-y-[24px]">
           {data.map((genre) => (

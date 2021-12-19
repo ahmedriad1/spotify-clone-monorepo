@@ -154,8 +154,6 @@ const SingleItem: React.FC<SingleItemProps> = ({
                 album={info}
                 track={track}
                 onClick={() => onSongClick(track)}
-                active={currentSong?.id === track.id}
-                isPlaying={currentSong?.id === track.id && isPlaying}
               />
             ))}
           </ul>

@@ -42,12 +42,11 @@ const Layout: React.FC<LayoutProps> = ({
 
       <Sidebar />
       <Nav scrolledStyles={scrolledNavStyles} scrolled={scrolled} />
-      <div
-        className="bg-[#121212] w-full h-full relative [grid-area:main-view] overflow-y-auto"
-        ref={ref}
-      >
+
+      <div className="bg-[#121212] w-full h-full relative [grid-area:main-view] overflow-hidden">
         <div
-          className="text-white px-4 pr-[calc(1rem+15px)] pt-[calc(24px+60px)] pb-6 lg:px-8 lg:pr-[calc(2rem+15px)] h-full"
+          className="text-white px-4 pr-[calc(2rem+30px)] pt-20 pb-6 lg:px-8 h-full overflow-y-auto"
+          ref={ref}
           style={innerStyle}
         >
           {children}

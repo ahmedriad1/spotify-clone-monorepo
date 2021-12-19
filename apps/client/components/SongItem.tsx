@@ -1,74 +1,105 @@
 import { useAuthStore } from '@spotify-clone-monorepo/auth';
 import PrettyMs from 'pretty-ms';
+import { useMemo } from 'react';
 import useIsTrackLiked from '../hooks/useIsTrackLiked';
 import useLikeTrackMutation from '../hooks/useLikeTrackMutation';
 import { Album } from '../hooks/useSingleAlbum';
+import useTrack from '../hooks/useTrack';
+import usePlayerStore from '../stores/PlayerStore';
 
 interface SongItemProps {
-  onClick: () => void;
   track: Album['tracks'][0];
-  album: Album;
-  isPlaying: boolean;
-  active: boolean;
+  album: {
+    imageUrl: string;
+    tracks?: Album['tracks'];
+    artists: { id: string; name: string }[];
+  };
+  showAlbumImg?: boolean;
 }
 
 const SongItem: React.FC<SongItemProps> = ({
-  onClick,
-  active,
   album,
-  isPlaying,
   track,
+  showAlbumImg = false,
 }) => {
+  const currentSongId = usePlayerStore((s) => s.currentSong);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const setQueue = usePlayerStore((s) => s.setQueue);
+  const pause = usePlayerStore((s) => s.pause);
+  const resume = usePlayerStore((s) => s.resume);
+
+  const { data: currentSong } = useTrack(currentSongId);
+
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const likeTrackMutation = useLikeTrackMutation();
-  const { data: isLiked } = useIsTrackLiked(
-    track.id,
-    album.tracks.map(({ id }) => id)
+  const tracks = useMemo(
+    () => (album.tracks ? album.tracks.map(({ id }) => id) : [track.id]),
+    [album, track]
   );
+  const { data: isLiked } = useIsTrackLiked(track.id, tracks);
+
+  const active = currentSong?.id === track.id;
+  const isTrackPlaying = currentSong?.id === track.id && isPlaying;
+
+  const playSong = () => {
+    if (!currentSong || currentSongId !== track.id)
+      return setQueue({
+        tracks,
+        currentSong: track.id,
+      });
+    if (isPlaying) return pause();
+    return resume();
+  };
 
   return (
     <li
       className={`cursor-pointer w-full p-3 flex items-center ${
         active ? 'text-sp-green' : ''
       } trasition-colors duration-200 ease-in-out group hover:bg-[rgba(255,255,255,0.1)]`}
-      onClick={onClick}
+      onClick={playSong}
     >
       <div
         className={`${
           active ? 'text-sp-green' : 'text-[rgba(255,255,255,0.7)]'
         } pr-4`}
-        onClick={(e) => e.stopPropagation()}
       >
-        <svg
-          className="w-4 h-4 fill-current group-hover:hidden"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-        >
-          <path d="M334.938 102.697c-30.917-24.154-57.604-45.007-57.604-91.999C277.333 4.785 272.563 0 266.667 0S256 4.785 256 10.698v351.53c0 11.805-9.563 21.396-21.333 21.396H192c-47.063 0-85.333 28.793-85.333 64.188S144.937 512 192 512s85.333-28.793 85.333-64.188V77.853c12.349 16.53 28.538 29.241 44.5 41.706C353.792 144.548 384 168.138 384 223.154c0 5.913 4.771 10.698 10.667 10.698s10.667-4.785 10.667-10.698c-.001-65.463-37.396-94.694-70.396-120.457zM256 447.812c0 23.193-29.313 42.792-64 42.792s-64-19.599-64-42.792 29.313-42.792 64-42.792h42.667A42.214 42.214 0 00256 399.274v48.538z" />
-        </svg>
-        {isPlaying ? (
-          <svg
-            className="w-4 h-4 fill-current hidden group-hover:block"
-            viewBox="0 0 24 24"
-          >
-            <svg
-              className="fill-current"
-              viewBox="-45 0 327 327"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M158 0h71a8 8 0 018 8v311a8 8 0 01-8 8h-71a8 8 0 01-8-8V8a8 8 0 018-8zm0 0M8 0h71a8 8 0 018 8v311a8 8 0 01-8 8H8a8 8 0 01-8-8V8a8 8 0 018-8zm0 0" />
-            </svg>
-          </svg>
+        {showAlbumImg ? (
+          <img src={album.imageUrl} className="w-12 h-12 fill-current" />
         ) : (
           <svg
-            className="w-4 h-4 fill-current hidden group-hover:block"
-            viewBox="0 0 85 100"
+            className="w-4 h-4 fill-current group-hover:hidden"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
           >
-            <path d="M81 44.6c5 3 5 7.8 0 10.8L9 98.7c-5 3-9 .7-9-5V6.3c0-5.7 4-8 9-5l72 43.3z">
-              <title>PLAY</title>
-            </path>
+            <path d="M334.938 102.697c-30.917-24.154-57.604-45.007-57.604-91.999C277.333 4.785 272.563 0 266.667 0S256 4.785 256 10.698v351.53c0 11.805-9.563 21.396-21.333 21.396H192c-47.063 0-85.333 28.793-85.333 64.188S144.937 512 192 512s85.333-28.793 85.333-64.188V77.853c12.349 16.53 28.538 29.241 44.5 41.706C353.792 144.548 384 168.138 384 223.154c0 5.913 4.771 10.698 10.667 10.698s10.667-4.785 10.667-10.698c-.001-65.463-37.396-94.694-70.396-120.457zM256 447.812c0 23.193-29.313 42.792-64 42.792s-64-19.599-64-42.792 29.313-42.792 64-42.792h42.667A42.214 42.214 0 00256 399.274v48.538z" />
           </svg>
         )}
+
+        {!showAlbumImg ? (
+          isTrackPlaying ? (
+            <svg
+              className="w-4 h-4 fill-current hidden group-hover:block"
+              viewBox="0 0 24 24"
+            >
+              <svg
+                className="fill-current"
+                viewBox="-45 0 327 327"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M158 0h71a8 8 0 018 8v311a8 8 0 01-8 8h-71a8 8 0 01-8-8V8a8 8 0 018-8zm0 0M8 0h71a8 8 0 018 8v311a8 8 0 01-8 8H8a8 8 0 01-8-8V8a8 8 0 018-8zm0 0" />
+              </svg>
+            </svg>
+          ) : (
+            <svg
+              className="w-4 h-4 fill-current hidden group-hover:block"
+              viewBox="0 0 85 100"
+            >
+              <path d="M81 44.6c5 3 5 7.8 0 10.8L9 98.7c-5 3-9 .7-9-5V6.3c0-5.7 4-8 9-5l72 43.3z">
+                <title>PLAY</title>
+              </path>
+            </svg>
+          )
+        ) : null}
 
         {/*  */}
       </div>

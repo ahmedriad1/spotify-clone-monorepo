@@ -2,7 +2,71 @@ import { CSSProperties, Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { useAuthStore } from '@spotify-clone-monorepo/auth';
 import Link from 'next/link';
-import { BackButton } from '@spotify-clone-monorepo/ui';
+import { BackButton, LazyImage, toast } from '@spotify-clone-monorepo/ui';
+import { ChevronDownIcon } from '@heroicons/react/outline';
+
+const ProfileLink = ({ active, ...props }: { active: boolean }) => (
+  <Link href="/profile">
+    <a
+      className={`block px-4 py-2 text-sm ${active && 'bg-[#131313]'}`}
+      {...props}
+    >
+      Your Profile
+    </a>
+  </Link>
+);
+const ProfileDropdown = () => {
+  const user = useAuthStore((state) => state.user);
+  const setLogout = useAuthStore((state) => state.logout);
+
+  const logout = (e) => {
+    e.preventDefault();
+    setLogout();
+    toast('success', 'Logged out !');
+  };
+
+  return (
+    <Menu as="div" className="ml-3 relative">
+      <div>
+        <Menu.Button className="bg-black rounded-full py-2 px-8 text-sm text-white opacity-100 cursor-pointer no-underline flex items-center sp-ring">
+          {user.name}
+          <ChevronDownIcon className="w-4 h-4 ml-2" />
+        </Menu.Button>
+      </div>
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100 transform"
+        enterFrom="opacity-0 scale-95"
+        enterTo="opacity-100 scale-100"
+        leave="transition ease-in duration-75 transform"
+        leaveFrom="opacity-100 scale-100"
+        leaveTo="opacity-0 scale-95"
+      >
+        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
+          <div className="py-1 rounded-md bg-[#040404] shadow-xs">
+            <Menu.Item>
+              {/* I did that because i wanted to pass the menu item props to the <a> not <Link> */}
+              {({ active }) => <ProfileLink active={active} />}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <a
+                  href="/logout"
+                  onClick={logout}
+                  className={`block px-4 py-2 text-sm ${
+                    active && 'bg-[#131313]'
+                  }`}
+                >
+                  Sign out
+                </a>
+              )}
+            </Menu.Item>
+          </div>
+        </Menu.Items>
+      </Transition>
+    </Menu>
+  );
+};
 
 interface NavProps {
   styles?: CSSProperties;
@@ -12,8 +76,6 @@ interface NavProps {
 
 const Nav: React.FC<NavProps> = ({ styles, scrolledStyles, scrolled }) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
 
   return (
     <div className="h-[60px] w-full sticky z-10 [grid-area:main-view]">
@@ -42,58 +104,7 @@ const Nav: React.FC<NavProps> = ({ styles, scrolledStyles, scrolled }) => {
             </Link>
           </div>
         ) : (
-          <Menu as="div" className="relative inline-block text-left">
-            <Menu.Button className="bg-black rounded-[20px] py-2 px-[30px] text-sm text-white opacity-100 cursor-pointer no-underline flex items-center sp-ring">
-              {user.name}
-              <svg
-                className="w-[10px] h-[10px] transform -rotate-90 ml-2 align-middle"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M15.54 21.15L5.095 12.23 15.54 3.31l.65.76-9.555 8.16 9.555 8.16"
-                />
-              </svg>
-            </Menu.Button>
-            <Transition
-              as={Fragment}
-              enter="transition duration-100 ease-out"
-              enterFrom="transform scale-95 opacity-0"
-              enterTo="transform scale-100 opacity-100"
-              leave="transition duration-75 ease-out"
-              leaveFrom="transform scale-100 opacity-100"
-              leaveTo="transform scale-95 opacity-0"
-            >
-              <Menu.Items className="absolute right-0 w-44 mt-2 origin-top-right bg-[#040404] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link href="/profile">
-                      <a
-                        className={`${
-                          active && 'bg-[#131313]'
-                        } hover:bg-[#131313] py-3 px-8 block`}
-                      >
-                        Profile
-                      </a>
-                    </Link>
-                  )}
-                </Menu.Item>
-
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active && 'bg-[#131313]'
-                      } hover:bg-[#131313] py-3 px-8 w-full text-left`}
-                      onClick={() => logout()}
-                    >
-                      Logout
-                    </button>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Transition>
-          </Menu>
+          <ProfileDropdown />
         )}
       </div>
     </div>

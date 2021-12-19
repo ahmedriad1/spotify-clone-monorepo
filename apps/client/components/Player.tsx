@@ -68,7 +68,7 @@ const Player = () => {
   }, [currentSong?.id]);
 
   if (!currentSongId || (!isLoading && !currentSong)) return null;
-  console.log(currentSong);
+
   return (
     <div className="z-50 w-full [grid-area:now-playing-bar]">
       <div className="bg-[#181818] text-center px-4 h-[90px] flex items-center justify-between text-white z-[2] border-t-[1px] border-solid border-[#282828] min-w-[620px]">

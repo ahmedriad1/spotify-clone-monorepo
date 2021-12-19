@@ -33,7 +33,7 @@ const MyApp = ({ Component, pageProps, initialZustandState }: MyAppProps) => {
           className="w-full h-screen grid grid-cols-[auto,1fr] grid-rows-[1fr,auto] overflow-hidden font-circular-medium text-white"
           style={{
             gridTemplateAreas:
-              "'side-bar main-view buddy-feed' 'now-playing-bar now-playing-bar now-playing-bar'",
+              "'side-bar main-view main-view' 'now-playing-bar now-playing-bar now-playing-bar'",
           }}
         >
           <Component {...pageProps} />

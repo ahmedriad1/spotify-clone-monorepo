@@ -19,16 +19,16 @@ const UNLIKE_TRACK_MUTATION = gql`
   }
 `;
 
-interface Context {
-  trackId: string;
-  previousStatus: boolean;
-}
-
 const useLikeTrackMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    async (trackId: string) => {
+  return useMutation<
+    { id: string },
+    unknown,
+    string,
+    { trackId: string; previousStatus: boolean }
+  >(
+    async (trackId) => {
       const isLiked = queryClient.getQueryData<boolean>([
         'isTrackLiked',
         trackId,
@@ -47,7 +47,6 @@ const useLikeTrackMutation = () => {
     },
     {
       onMutate: async (variables) => {
-        console.log({ variables });
         await queryClient.cancelQueries(['isTrackLiked', variables]);
 
         const isLiked = queryClient.getQueryData<boolean>([
@@ -59,7 +58,7 @@ const useLikeTrackMutation = () => {
 
         return { trackId: variables, previousStatus };
       },
-      onSuccess: (data, variables, context: Context) => {
+      onSuccess: (data, variables, context) => {
         queryClient.setQueryData(
           ['isTrackLiked', context.trackId],
           !context.previousStatus
@@ -76,7 +75,7 @@ const useLikeTrackMutation = () => {
           ['isTrackLiked', context.trackId],
           context.previousStatus
         );
-        toast('error', 'Error');
+        toast('error', 'Failed to toggle track');
       },
     }
   );

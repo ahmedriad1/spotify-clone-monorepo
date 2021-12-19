@@ -47,14 +47,8 @@ const Album = () => {
         background: 'rgb(192, 64, 64)',
         paddingLeft: 0,
         paddingRight: 0,
+        paddingBottom: 0,
       }}
-
-      // innerStyles={{ padding: 0 }}
-      // outerStyles={{
-      //   backgroundImage:
-      //     'linear-gradient(rgb(83, 83, 83), transparent), linear-gradient(rgba(0, 0, 0, 0.5), transparent)',
-      // }}
-      // navStyles={{ position: 'sticky' }}
     >
       {isLoading ? (
         <Loading />

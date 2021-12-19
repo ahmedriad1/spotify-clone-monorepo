@@ -17,21 +17,20 @@ const useIsTrackLiked = (id: string, tracks: Track[] | string[] = []) => {
   return useQuery<boolean>(['isTrackLiked', id], async () => {
     if (!id) return;
 
-    if (queryClient.getQueryData(['isTrackLiked', id]))
-      return queryClient.getQueryData<boolean>(['isTrackLiked', id]);
+    const isLiked = queryClient.getQueryData<boolean>(['isTrackLiked', id]);
+
+    if (typeof isLiked === 'boolean') return isLiked;
 
     const ids = tracks.length
       ? tracks.map((track) => (typeof track === 'string' ? track : track.id))
       : [id];
 
-    if (tracks.length) {
-      const { trackLikesContain } = await axiosGql<{
-        trackLikesContain: { id: string; liked: boolean }[];
-      }>(TRACK_LIKED_QUERY, { ids });
-      trackLikesContain.forEach((track) =>
-        queryClient.setQueryData(['isTrackLiked', track.id], track.liked)
-      );
-    }
+    const { trackLikesContain } = await axiosGql<{
+      trackLikesContain: { id: string; liked: boolean }[];
+    }>(TRACK_LIKED_QUERY, { ids });
+    trackLikesContain.forEach((track) =>
+      queryClient.setQueryData(['isTrackLiked', track.id], track.liked)
+    );
 
     return queryClient.getQueryData<boolean>(['isTrackLiked', id]);
   });
