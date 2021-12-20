@@ -1,3 +1,4 @@
+import { LazyImage } from '@spotify-clone-monorepo/ui';
 import PlayButton from './PlayButton';
 
 interface CardProps {
@@ -13,16 +14,21 @@ const Card: React.FC<CardProps> = ({ data, roundedImage = false }) => {
   return (
     <div className="flex-1 w-full bg-[#181818] rounded overflow-hidden p-4 relative transition-colors duration-300 ease-in-out hover:bg-[#282828] group">
       <div
-        className={`mb-4 relative ${!roundedImage && 'bg-[#333] shadow-card'}`}
+        className={`mb-4 relative aspect-square ${
+          !roundedImage ? 'bg-[#333] shadow-card' : ''
+        }`}
       >
-        <img
-          className={`w-full h-full rounded-sm object-cover object-center ${
+        <LazyImage
+          className={` rounded-sm ${
             roundedImage && 'rounded-full bg-[#333] shadow-card'
           }`}
           src={data.image}
-          loading="lazy"
           alt="Cover"
+          objectFit="cover"
+          objectPosition="center"
+          layout="fill"
         />
+
         <PlayButton className="group-hover:opacity-100 group-hover:translate-y-0" />
       </div>
 

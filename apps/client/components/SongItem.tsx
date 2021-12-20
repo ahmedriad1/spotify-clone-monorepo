@@ -1,4 +1,5 @@
 import { useAuthStore } from '@spotify-clone-monorepo/auth';
+import { LazyImage } from '@spotify-clone-monorepo/ui';
 import PrettyMs from 'pretty-ms';
 import { useMemo } from 'react';
 import useIsTrackLiked from '../hooks/useIsTrackLiked';
@@ -64,7 +65,7 @@ const SongItem: React.FC<SongItemProps> = ({
         } pr-4`}
       >
         {showAlbumImg ? (
-          <img src={album.imageUrl} className="w-12 h-12 fill-current" />
+          <LazyImage width={48} height={48} src={album.imageUrl} />
         ) : (
           <svg
             className="w-4 h-4 fill-current group-hover:hidden"

@@ -27,6 +27,7 @@ import { AlbumService } from './album.service';
 import { CreateAlbumInput, UpdateAlbumInput } from './dto';
 import { Album } from './models/album.model';
 import { AppConfigService } from '../environments/app.environment';
+import { useAuth } from '../auth/use-auth.decorator';
 
 @Resolver(() => Album)
 export class AlbumResolver {
@@ -119,7 +120,7 @@ export class AlbumResolver {
   }
 
   @Mutation(() => Album)
-  @UseGuards(GraphqlAuthGuard)
+  @useAuth()
   async likeAlbum(
     @Args('where') where: AlbumWhereUniqueInput,
     @CurrentUser() user: PassportUserFields

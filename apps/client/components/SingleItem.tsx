@@ -1,4 +1,5 @@
 import { useAuthStore } from '@spotify-clone-monorepo/auth';
+import { LazyImage } from '@spotify-clone-monorepo/ui';
 import PrettyMs from 'pretty-ms';
 import shallow from 'zustand/shallow';
 import { Album } from '../hooks/useSingleAlbum';
@@ -53,13 +54,13 @@ const SingleItem: React.FC<SingleItemProps> = ({
           }}
         />
         <div className="flex px-9 text-center h-full">
-          <div className="w-[192px] h-[192px] mr-6 self-end z-0">
-            <img
-              loading="lazy"
+          <div className="aspect-square mr-6 self-end z-0">
+            <LazyImage
               src={info.imageUrl}
               alt="Album Poster"
-              className="h-full w-full object-cover"
-              style={{ boxShadow: '0 4px 60px rgb(0 0 0 / 50%)' }}
+              className="h-full w-full object-cover [box-shadow:0_4px_60px_rgb(0_0_0/50%)]"
+              width={192}
+              height={192}
             />
           </div>
 
@@ -149,12 +150,7 @@ const SingleItem: React.FC<SingleItemProps> = ({
 
           <ul className="mt-5 z-[inherit]">
             {info.tracks.map((track) => (
-              <SongItem
-                key={track.id}
-                album={info}
-                track={track}
-                onClick={() => onSongClick(track)}
-              />
+              <SongItem key={track.id} album={info} track={track} />
             ))}
           </ul>
         </div>

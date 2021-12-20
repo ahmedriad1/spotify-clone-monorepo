@@ -11,7 +11,7 @@ const HeadlessLayout: React.FC<HeadlessLayoutProps> = ({ title, children }) => {
         <title>Spotify | {title}</title>
       </Head>
 
-      <div className="bg-[#121212] w-full min-h-screen relative">
+      <div className="bg-[#121212] w-screen min-h-screen relative">
         {children}
       </div>
     </>

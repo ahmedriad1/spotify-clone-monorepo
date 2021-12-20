@@ -1,7 +1,7 @@
 import { isBrowser } from '@spotify-clone-monorepo/utils';
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 
-const shimmer = (w: number, h: number) => `
+const shimmer = (w: string | number, h: string | number) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
     <linearGradient id="g">
@@ -26,15 +26,19 @@ interface LazyImageProps {
   alt?: string;
 }
 
-const LazyImage: React.FC<LazyImageProps> = (props) => {
-  if (props.width < 40 || props.height < 40) return <Image {...props} />;
+const LazyImage: React.FC<ImageProps> = (props) => {
+  if ((props.width && props.width < 40) || (props.height && props.height < 40))
+    return <Image {...props} />;
 
   return (
     <Image
       {...props}
       placeholder="blur"
       blurDataURL={`data:image/svg+xml;base64,${toBase64(
-        shimmer(props.width, props.height)
+        shimmer(
+          props.layout === 'fill' ? '100%' : props.width || 100,
+          props.layout === 'fill' ? '100%' : props.height || 100
+        )
       )}`}
     />
   );

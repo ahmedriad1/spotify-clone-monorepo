@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 
 import { AppConfigService } from '../environments/app.environment';
 import { UserModel } from '../user/models/user.model';
-import { SessionTokenFields } from './types';
 
 /**
  * Authentication service.
@@ -12,7 +11,7 @@ import { SessionTokenFields } from './types';
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly appEnvironment: AppConfigService
+    private readonly configService: AppConfigService
   ) {}
 
   /**
@@ -21,17 +20,15 @@ export class AuthService {
   async session(user: Pick<UserModel, 'id'>) {
     const date = new Date();
 
-    const payload: SessionTokenFields = {
+    const payload = {
       sub: user.id,
     };
 
-    const accessTokenExpiresIn = this.appEnvironment.accessTokenExpiresIn;
-    const refreshTokenExpiresIn = this.appEnvironment.refreshTokenExpiresIn;
+    const accessTokenExpiresIn = this.configService.accessTokenExpiresIn;
+    const refreshTokenExpiresIn = this.configService.refreshTokenExpiresIn;
 
     return {
-      accessToken: await this.jwtService.signAsync(payload, {
-        expiresIn: accessTokenExpiresIn,
-      }),
+      accessToken: await this.jwtService.signAsync(payload),
       refreshToken: await this.jwtService.signAsync(payload, {
         expiresIn: refreshTokenExpiresIn,
       }),

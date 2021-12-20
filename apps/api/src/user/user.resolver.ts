@@ -1,14 +1,10 @@
 import { CurrentUser } from '../utils/current-user-decorator';
-import {
-  GraphqlAuthGuard,
-  OptionalGraphqlAuthGuard,
-} from '../utils/nestjs-passport-graphql-auth-guard';
 import { AuthService } from '../auth/auth.service';
 import {
   UserWhereInput,
   UserWhereUniqueInput,
 } from '@spotify-clone-monorepo/model';
-import { UnauthorizedException, UseGuards } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -20,9 +16,9 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { PrismaSelect } from '@paljs/plugins';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { GraphQLResolveInfo } from 'graphql';
-import { GraphQLContext, PassportUserFields } from '../types';
+import { GraphQLContext } from '../types';
 import {
   RefreshTokenInput,
   UserCreateInput,
@@ -35,66 +31,52 @@ import {
   IPaginationInfo,
   PaginationInfo,
 } from '../utils/pagination-info.decorator';
+import { useAuth, useOptionalAuth } from '../auth/use-auth.decorator';
 
 @Resolver(() => UserModel)
 export class UserResolver {
+  private readonly defaultFields = {
+    defaultFields: {
+      User: { id: true },
+    },
+  };
+
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService
   ) {}
 
-  @UseGuards(GraphqlAuthGuard)
   @Query(() => UserModel)
-  async me(
-    @CurrentUser() user: PassportUserFields,
-    @Info() info: GraphQLResolveInfo
-  ) {
-    const select = new PrismaSelect(info, {
-      defaultFields: {
-        User: { id: true },
-      },
-    }).value.select;
-
+  @useAuth()
+  async me(@CurrentUser() user: User, @Info() info: GraphQLResolveInfo) {
     return this.userService.findUnique({
       where: { id: user.id },
-      select,
+      select: new PrismaSelect(info, this.defaultFields).value.select,
     });
   }
 
-  @UseGuards(OptionalGraphqlAuthGuard)
   @Query(() => UserModel)
+  @useOptionalAuth()
   async user(
     @Args('where') where: UserWhereUniqueInput,
     @Info() info: GraphQLResolveInfo
   ) {
-    const select = new PrismaSelect(info, {
-      defaultFields: {
-        User: { id: true },
-      },
-    }).value.select;
-
     return this.userService.findUnique({
-      select,
+      select: new PrismaSelect(info, this.defaultFields).value.select,
       where,
       rejectOnNotFound: true,
     });
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Query(() => [UserModel])
+  @useAuth()
   async users(
     @PaginationInfo() p: IPaginationInfo,
     @Info() info: GraphQLResolveInfo,
     @Args({ name: 'where', nullable: true }) where?: UserWhereInput
   ) {
-    const select = new PrismaSelect(info, {
-      defaultFields: {
-        User: { id: true },
-      },
-    }).value.select;
-
     return this.userService.findAll({
-      select,
+      select: new PrismaSelect(info, this.defaultFields).value.select,
       where,
       ...p,
     });
@@ -111,11 +93,11 @@ export class UserResolver {
     return user;
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => UserModel)
+  @useAuth()
   async updateUser(
     @Args('data') data: UserUpdateInput,
-    @CurrentUser() user: PassportUserFields
+    @CurrentUser() user: User
   ) {
     return this.userService.update(
       { id: user.id },
@@ -168,8 +150,8 @@ export class UserResolver {
     return context.refreshToken;
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Query(() => Number)
+  @useAuth()
   async totalUsers(
     @Args({ name: 'where', nullable: true }) where?: UserWhereInput
   ) {

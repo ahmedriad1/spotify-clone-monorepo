@@ -26,11 +26,11 @@ import { GraphQLError } from 'graphql';
     }),
     GraphQLModule.forRootAsync({
       useFactory: () => ({
-        autoSchemaFile: '~schema.gql',
+        autoSchemaFile: true,
         sortSchema: true,
         playground: true,
         autoTransformHttpErrors: true,
-        context: (data: any) => {
+        context: (data) => {
           return {
             token: undefined as string | undefined,
             refreshToken: undefined as string | undefined,
