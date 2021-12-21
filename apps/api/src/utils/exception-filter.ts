@@ -1,5 +1,11 @@
 import { AppConfigService } from '../environments/app.environment';
-import { ArgumentsHost, Catch, HttpException } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  HttpException,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { GqlContextType, GqlExceptionFilter } from '@nestjs/graphql';
 import {
   ApolloError,
@@ -14,29 +20,54 @@ const apolloPredefinedExceptions = {
   404: PersistedQueryNotFoundError,
 };
 
-@Catch(HttpException, Error)
+@Catch()
 export class ExceptionFilter implements GqlExceptionFilter {
+  private logger = new Logger(ExceptionFilter.name);
+
   constructor(private readonly appEnvironment: AppConfigService) {}
 
-  catch(exception: HttpException, host: ArgumentsHost) {
-    if (host.getType<GqlContextType>() !== 'graphql') return;
+  catch(exception: HttpException | Error, host: ArgumentsHost) {
+    if (host.getType<GqlContextType>() !== 'graphql')
+      return this.handleHttpException(exception, host);
+
+    if (exception instanceof HttpException) {
+      const error: ApolloError =
+        exception.getStatus() in apolloPredefinedExceptions
+          ? new apolloPredefinedExceptions[exception.getStatus()](
+              exception.message
+            )
+          : new ApolloError(
+              exception.message,
+              exception.getStatus().toString()
+            );
+      throw error;
+    }
+
     const name = exception.constructor.name;
 
-    if (name === 'NotFoundError' || name === 'PrismaClientKnownRequestError2')
+    if (name === 'PrismaClientKnownRequestError2')
       throw new ApolloError(exception.message, 'NOT_FOUND');
 
-    const error: ApolloError =
-      exception.getStatus() in apolloPredefinedExceptions
-        ? new apolloPredefinedExceptions[exception.getStatus()](
-            exception.message
-          )
-        : new ApolloError(exception.message, exception.getStatus().toString());
-
-    if (this.appEnvironment.isDevelopment()) error.stack = exception.stack;
-    console.log(error);
+    const error = new ApolloError(exception.message, 'INTERNAL_SERVER_ERROR');
 
     throw error;
   }
+
+  handleHttpException(exception: HttpException | Error, host: ArgumentsHost) {
+    const res = host.switchToHttp().getResponse();
+
+    if (exception instanceof HttpException)
+      return res.status(exception.getStatus()).json(exception.getResponse());
+
+    const newException = new InternalServerErrorException();
+
+    this.logger.error(exception);
+
+    return res
+      .status(newException.getStatus())
+      .json(newException.getResponse());
+  }
+
   // catch(exception: any, host: ArgumentsHost) {
   //     if (host.getType() === 'http') {
   //         // todo: need find status code

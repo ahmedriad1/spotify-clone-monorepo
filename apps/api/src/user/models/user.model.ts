@@ -31,3 +31,6 @@ export class UserModel {
   @Field(() => Date, { nullable: true })
   updatedAt!: Date;
 }
+
+@ObjectType()
+export class AuthenticatedUserModel extends UserModel {}

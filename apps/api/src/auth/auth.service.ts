@@ -4,9 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { AppConfigService } from '../environments/app.environment';
 import { UserModel } from '../user/models/user.model';
 
-/**
- * Authentication service.
- */
 @Injectable()
 export class AuthService {
   constructor(
@@ -14,9 +11,6 @@ export class AuthService {
     private readonly configService: AppConfigService
   ) {}
 
-  /**
-   * Returns accessToken.
-   */
   async session(user: Pick<UserModel, 'id'>) {
     const date = new Date();
 
@@ -37,9 +31,6 @@ export class AuthService {
     };
   }
 
-  /**
-   * Get user from store by refresh token and return new session.
-   */
   public async refreshToken(token) {
     try {
       const { sub } = await this.jwtService.verify(token);
