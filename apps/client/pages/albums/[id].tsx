@@ -41,10 +41,10 @@ const Album = () => {
 
   return (
     <Layout
-      scrolledNavStyles={{ background: 'rgb(192, 64, 64)' }}
+      scrolledNavStyles={{ background: data?.image?.color }}
       title={isLoading ? 'Album' : data.name}
       innerStyle={{
-        background: 'rgb(192, 64, 64)',
+        background: data?.image?.color,
         paddingLeft: 0,
         paddingRight: 0,
         paddingBottom: 0,

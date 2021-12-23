@@ -19,7 +19,10 @@ export class GenreResolver {
     Genre: { id: true },
     Album: {
       id: true,
-      imageId: true,
+      image: true,
+    },
+    Image: {
+      cloudinaryId: true,
     },
   };
 

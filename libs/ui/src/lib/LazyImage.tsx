@@ -1,5 +1,6 @@
 import { isBrowser } from '@spotify-clone-monorepo/utils';
-import Image, { ImageProps } from 'next/image';
+import Image from 'next/image';
+import type { ImageProps } from 'next/image';
 
 const shimmer = (w: string | number, h: string | number) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -18,16 +19,11 @@ const shimmer = (w: string | number, h: string | number) => `
 const toBase64 = (str: string) =>
   isBrowser() ? window.btoa(str) : Buffer.from(str).toString('base64');
 
-interface LazyImageProps {
-  width: number;
-  height: number;
-  src: string;
-  className?: string;
-  alt?: string;
-}
-
 const LazyImage: React.FC<ImageProps> = (props) => {
-  if ((props.width && props.width < 40) || (props.height && props.height < 40))
+  if (
+    (props?.width && props?.width < 40) ||
+    (props?.height && props?.height < 40)
+  )
     return <Image {...props} />;
 
   return (

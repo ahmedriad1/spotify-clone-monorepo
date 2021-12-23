@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@spotify-clone-monorepo/auth": ["libs/auth/src/index.ts"],
+      "@spotify-clone-monorepo/colors": ["libs/colors/src/index.ts"],
       "@spotify-clone-monorepo/data-admin": ["libs/data-admin/src/index.ts"],
       "@spotify-clone-monorepo/model": ["libs/model/src/index.ts"],
       "@spotify-clone-monorepo/ui": ["libs/ui/src/index.ts"],

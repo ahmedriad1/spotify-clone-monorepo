@@ -21,6 +21,9 @@ export interface Album {
   _count: {
     tracks: number;
   };
+  image: {
+    color: string;
+  };
 }
 
 const ALBUM_QUERY = gql`
@@ -31,6 +34,9 @@ const ALBUM_QUERY = gql`
       description
       imageUrl
       type
+      image {
+        color
+      }
       artists {
         id
         name
@@ -57,8 +63,6 @@ const useSingleAlbum = (id) => {
       return album;
     },
     {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
       // onSuccess: data => {
       //   const { tracks, ...rest } = data;
       //   tracks.forEach(track => {

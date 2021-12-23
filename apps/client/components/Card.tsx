@@ -19,7 +19,7 @@ const Card: React.FC<CardProps> = ({ data, roundedImage = false }) => {
         }`}
       >
         <LazyImage
-          className={` rounded-sm ${
+          className={`rounded-sm ${
             roundedImage && 'rounded-full bg-[#333] shadow-card'
           }`}
           src={data.image}

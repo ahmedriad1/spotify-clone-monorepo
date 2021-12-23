@@ -29,6 +29,29 @@
     },
     "client": "apps/client",
     "client-e2e": "apps/client-e2e",
+    "colors": {
+      "root": "libs/colors",
+      "sourceRoot": "libs/colors/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/colors/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/colors"],
+          "options": {
+            "jestConfig": "libs/colors/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "data-admin": {
       "root": "libs/data-admin",
       "sourceRoot": "libs/data-admin/src",

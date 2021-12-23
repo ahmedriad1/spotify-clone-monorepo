@@ -20,3 +20,4 @@ export { AlbumWhereInput } from './@generated/album/album-where.input';
 export { Album } from './@generated/album/album.model';
 
 export { AlbumType } from './@generated/prisma/album-type.enum';
+export { AlbumImage } from './@generated/album-image/album-image.model';

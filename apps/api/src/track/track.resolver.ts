@@ -38,7 +38,10 @@ export class TrackResolver {
     },
     Album: {
       id: true,
-      imageId: true,
+      image: true,
+    },
+    Image: {
+      cloudinaryId: true,
     },
   };
 

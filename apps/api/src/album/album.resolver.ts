@@ -13,31 +13,22 @@ import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Float,
-  Info,
   Mutation,
   Parent,
   Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { PrismaSelect } from '@paljs/plugins';
-import { GraphQLResolveInfo } from 'graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { AlbumService } from './album.service';
 import { CreateAlbumInput, UpdateAlbumInput } from './dto';
 import { Album } from './models/album.model';
 import { AppConfigService } from '../environments/app.environment';
 import { useAuth } from '../auth/use-auth.decorator';
+import { QuerySelect } from '../utils/query-select.decorator';
 
 @Resolver(() => Album)
 export class AlbumResolver {
-  private readonly defaultFields = {
-    Album: {
-      id: true,
-      imageId: true,
-    },
-  };
-
   constructor(
     private readonly albumService: AlbumService,
     // private readonly artistService: ArtistService,
@@ -47,13 +38,18 @@ export class AlbumResolver {
   @Query(() => [Album])
   async albums(
     @PaginationInfo() p: IPaginationInfo,
-    @Info() info: GraphQLResolveInfo,
+    @QuerySelect({
+      Album: {
+        id: true,
+        image: true,
+      },
+      AlbumImage: {
+        cloudinaryId: true,
+      },
+    })
+    select,
     @Args('where', { nullable: true }) where?: AlbumWhereInput
   ) {
-    this.appEnvironment.cloudinaryCloudName;
-    const select = new PrismaSelect(info, {
-      defaultFields: this.defaultFields,
-    }).value.select;
     return this.albumService.findAll({
       where,
       select,
@@ -64,11 +60,17 @@ export class AlbumResolver {
   @Query(() => Album)
   async album(
     @Args('where') where: AlbumWhereUniqueInput,
-    @Info() info: GraphQLResolveInfo
+    @QuerySelect({
+      Album: {
+        id: true,
+        image: true,
+      },
+      AlbumImage: {
+        cloudinaryId: true,
+      },
+    })
+    select
   ) {
-    const select = new PrismaSelect(info, {
-      defaultFields: this.defaultFields,
-    }).value.select;
     return this.albumService.findOne({ where, select, rejectOnNotFound: true });
   }
 
@@ -93,7 +95,16 @@ export class AlbumResolver {
     @Args('where') where: AlbumWhereUniqueInput,
     @Args('data') data: UpdateAlbumInput,
     // @CurrentUser() user,
-    @Info() info: GraphQLResolveInfo,
+    @QuerySelect({
+      Album: {
+        id: true,
+        image: true,
+      },
+      AlbumImage: {
+        cloudinaryId: true,
+      },
+    })
+    select,
     @Args({ name: 'image', type: () => GraphQLUpload, nullable: true })
     image?: FileUpload
   ) {
@@ -101,10 +112,6 @@ export class AlbumResolver {
     //     where: { userId: user.id },
     //     rejectOnNotFound: true,
     // });
-
-    const select = new PrismaSelect(info, {
-      defaultFields: this.defaultFields,
-    }).value.select;
 
     return this.albumService.update({
       where,
@@ -148,15 +155,13 @@ export class AlbumResolver {
   }
 
   @ResolveField(() => String, { nullable: true })
-  async imageUrl(@Parent() _: Album) {
-    return _.imageId
-      ? `${this.appEnvironment.cloudinaryBaseUrl}/image/upload/${_.imageId}`
-      : undefined;
+  async imageUrl(@Parent() album: Album) {
+    return `${this.appEnvironment.cloudinaryBaseUrl}/image/upload/${album.image.cloudinaryId}`;
   }
 
   @ResolveField(() => Float, { nullable: true })
-  async tracksDuration(@Parent() _: Album) {
-    return this.albumService.tracksDuration(_);
+  async tracksDuration(@Parent() album: Album) {
+    return this.albumService.tracksDuration(album);
   }
 
   @Query(() => Number)

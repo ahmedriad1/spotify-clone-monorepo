@@ -10,6 +10,7 @@ import { FileUpload } from 'graphql-upload';
 
 import { CreateAlbumInput, UpdateAlbumInput } from './dto';
 import { Album } from './models/album.model';
+import { ColorsService } from '@spotify-clone-monorepo/colors';
 
 @Injectable()
 export class AlbumService {
@@ -26,16 +27,23 @@ export class AlbumService {
     private readonly userRepo: PrismaRepository['user'],
     @InjectRepository('albumLikes')
     private readonly albumLikes: PrismaRepository['albumLikes'],
-    private readonly cloudinaryService: CloudinaryService
+    private readonly cloudinaryService: CloudinaryService,
+    private readonly colorsService: ColorsService
   ) {}
 
   async create({ data, image }: { data: CreateAlbumInput; image: FileUpload }) {
     const imageResponse = await this.cloudinaryService.uploadImage(image);
+    const color = await this.colorsService.getColors(imageResponse.url);
 
     return this.albumRepo.create({
       data: {
         ...data,
-        imageId: imageResponse.public_id,
+        image: {
+          create: {
+            cloudinaryId: imageResponse.public_id,
+            color,
+          },
+        },
         genre: { connect: { id: data.genre.id } },
         artists: { connect: data.artists },
       },
@@ -73,17 +81,26 @@ export class AlbumService {
     // if (album.artistId !== artist.id)
     //     throw new UnauthorizedException('Album does not belong to artist');
 
-    let newImageId;
+    let newImage;
+    let newColor;
 
     if (image) {
-      newImageId = (await this.cloudinaryService.uploadImage(image)).public_id;
+      newImage = await this.cloudinaryService.uploadImage(image);
+      newColor = await this.colorsService.getColors(newImage.url);
       if (album.imageId) this.cloudinaryService.deleteImages([album.imageId]);
     }
 
     return this.albumRepo.update({
       data: {
         ...data,
-        imageId: newImageId,
+        image: newImage
+          ? {
+              update: {
+                cloudinaryId: newImage.public_id,
+                color: newColor,
+              },
+            }
+          : {},
         genre: data.genre?.id ? { connect: data.genre } : {},
         artists: data.artists,
       },

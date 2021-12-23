@@ -40,9 +40,9 @@ CREATE TABLE "Album" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "type" "AlbumType" NOT NULL DEFAULT E'ALBUM',
-    "imageId" TEXT,
     "genreId" TEXT NOT NULL,
     "likesCount" INTEGER NOT NULL DEFAULT 0,
+    "imageId" TEXT,
     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
 
@@ -83,6 +83,15 @@ CREATE TABLE "AlbumLikes" (
 );
 
 -- CreateTable
+CREATE TABLE "AlbumImage" (
+    "id" TEXT NOT NULL,
+    "cloudinaryId" TEXT NOT NULL,
+    "color" TEXT,
+
+    CONSTRAINT "AlbumImage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_AlbumToArtist" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -117,6 +126,9 @@ ALTER TABLE "Artist" ADD CONSTRAINT "Artist_userId_fkey" FOREIGN KEY ("userId") 
 
 -- AddForeignKey
 ALTER TABLE "Album" ADD CONSTRAINT "Album_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Album" ADD CONSTRAINT "Album_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "AlbumImage"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Track" ADD CONSTRAINT "Track_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

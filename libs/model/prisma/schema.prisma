@@ -56,13 +56,14 @@ model Album {
   name        String
   description String
   type        AlbumType    @default(ALBUM)
-  imageId     String?
   genre       Genre        @relation(fields: [genreId], references: [id])
   genreId     String
   artists     Artist[]
   tracks      Track[]
   likedBy     AlbumLikes[]
   likesCount  Int          @default(0)
+  image       AlbumImage?  @relation(fields: [imageId], references: [id])
+  imageId     String?
   createdAt   DateTime?    @default(now())
   updatedAt   DateTime?    @updatedAt
 }
@@ -101,4 +102,11 @@ model AlbumLikes {
   likedAt DateTime @default(now())
 
   @@id([albumId, userId])
+}
+
+model AlbumImage {
+  id           String  @id @default(uuid())
+  cloudinaryId String
+  color        String?
+  albums       Album[]
 }

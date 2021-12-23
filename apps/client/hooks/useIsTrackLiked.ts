@@ -25,10 +25,11 @@ const useIsTrackLiked = (id: string, tracks: Track[] | string[] = []) => {
       ? tracks.map((track) => (typeof track === 'string' ? track : track.id))
       : [id];
 
-    const { trackLikesContain } = await axiosGql<{
+    const data = await axiosGql<{
       trackLikesContain: { id: string; liked: boolean }[];
     }>(TRACK_LIKED_QUERY, { ids });
-    trackLikesContain.forEach((track) =>
+    if (!data) return undefined;
+    data.trackLikesContain.forEach((track) =>
       queryClient.setQueryData(['isTrackLiked', track.id], track.liked)
     );
 

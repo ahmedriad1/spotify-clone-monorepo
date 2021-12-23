@@ -159,7 +159,7 @@ const usePlayerStore = create<
             };
           }),
       }),
-      { name: 'playerState', blacklist: ['isPlaying'] }
+      { name: 'playerState', partialize: ({ isPlaying, ...state }) => state }
     )
   )
 );
