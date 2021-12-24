@@ -14,12 +14,16 @@ const searchArtists = async (q: string, page: number) => {
   }>(
     gql`
       query searchArtists($q: String!, $page: Int!) {
-        artists(where: { name: { contains: $q } }, page: $page, limit: 10) {
+        artists(
+          where: { name: { contains: $q, mode: insensitive } }
+          page: $page
+          limit: 10
+        ) {
           id
           name
         }
 
-        totalArtists(where: { name: { contains: $q } })
+        totalArtists(where: { name: { contains: $q, mode: insensitive } })
       }
     `,
     { q, page }

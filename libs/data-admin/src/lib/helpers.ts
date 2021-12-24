@@ -1,11 +1,11 @@
-import { Option } from './data';
+import { Options } from 'react-select';
 
 export const createPaginatedLoader = <T>(
   searchFn: (q: string, page: number) => T,
   options: {
     total: keyof Awaited<T>;
     all: keyof Awaited<T>;
-    mapOptions?: (entity: unknown) => Option;
+    mapOptions?: (entity: unknown) => Options<T>[number];
   }
 ) => {
   return async (q: string, _: unknown, { page }: { page: number }) => {

@@ -14,12 +14,16 @@ const searchGenres = async (q: string, page: number) => {
   }>(
     gql`
       query searchGenres($q: String!, $page: Int!) {
-        genres(where: { name: { contains: $q } }, page: $page, limit: 10) {
+        genres(
+          where: { name: { contains: $q, mode: insensitive } }
+          page: $page
+          limit: 10
+        ) {
           id
           name
         }
 
-        totalGenres(where: { name: { contains: $q } })
+        totalGenres(where: { name: { contains: $q, mode: insensitive } })
       }
     `,
     { q, page }

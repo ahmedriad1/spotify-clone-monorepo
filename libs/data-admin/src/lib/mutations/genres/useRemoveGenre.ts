@@ -2,8 +2,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import { axiosGql, IGraphQLError } from '@spotify-clone-monorepo/auth';
 import { gql } from '@spotify-clone-monorepo/utils';
 import { toast } from '@spotify-clone-monorepo/ui';
-import { IPaginatedData } from '../../queries/createPaginatedQuery';
-import { Genre } from '../../data';
 
 export interface IRemoveGenreData {
   id: string;
@@ -12,7 +10,7 @@ export interface IRemoveGenreData {
 
 const useRemoveGenre = () => {
   const queryClient = useQueryClient();
-  return useMutation<any, IGraphQLError, IRemoveGenreData>(
+  return useMutation<unknown, IGraphQLError, IRemoveGenreData>(
     async ({ id }) => {
       const { removeGenre } = await axiosGql<{
         removeGenre: { id: string; name: string };
@@ -30,18 +28,9 @@ const useRemoveGenre = () => {
       return removeGenre;
     },
     {
-      onSuccess: (_, variables) => {
+      onSuccess: () => {
+        queryClient.invalidateQueries('genres');
         toast('success', 'Genre deleted');
-        queryClient.setQueryData<IPaginatedData<Genre[]> | undefined>(
-          ['genres', variables.page],
-          (data) => {
-            if (!data) return;
-            return {
-              total: data.total - 1,
-              all: data.all.filter((genre) => genre.id !== variables.id),
-            };
-          }
-        );
       },
     }
   );

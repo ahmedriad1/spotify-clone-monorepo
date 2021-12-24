@@ -14,12 +14,16 @@ const searchAlbums = async (q: string, page: number) => {
   }>(
     gql`
       query searchAlbums($q: String!, $page: Int!) {
-        albums(where: { name: { contains: $q } }, page: $page, limit: 10) {
+        albums(
+          where: { name: { contains: $q, mode: insensitive } }
+          page: $page
+          limit: 10
+        ) {
           id
           name
         }
 
-        totalAlbums(where: { name: { contains: $q } })
+        totalAlbums(where: { name: { contains: $q, mode: insensitive } })
       }
     `,
     { q, page }

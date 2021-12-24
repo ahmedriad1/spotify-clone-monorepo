@@ -16,7 +16,10 @@ const searchUsers = async (q: string, page: number) => {
     gql`
       query searchUsers($q: String!, $page: Int!) {
         users(
-          where: { name: { contains: $q }, artist: { is: null } }
+          where: {
+            name: { contains: $q, mode: insensitive }
+            artist: { is: null }
+          }
           page: $page
           limit: 10
         ) {
@@ -25,7 +28,12 @@ const searchUsers = async (q: string, page: number) => {
           email
         }
 
-        totalUsers(where: { name: { contains: $q } })
+        totalUsers(
+          where: {
+            name: { contains: $q, mode: insensitive }
+            artist: { is: null }
+          }
+        )
       }
     `,
     { q, page }

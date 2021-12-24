@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { axiosGql, IGraphQLError } from '@spotify-clone-monorepo/auth';
 import { gql } from '@spotify-clone-monorepo/utils';
 import { toast } from '@spotify-clone-monorepo/ui';
@@ -9,7 +9,9 @@ interface IAddArtistData {
 }
 
 const useAddArtist = () => {
-  return useMutation<any, IGraphQLError, IAddArtistData>(
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, IGraphQLError, IAddArtistData>(
     (data) =>
       axiosGql(
         gql`
@@ -24,6 +26,7 @@ const useAddArtist = () => {
       ),
     {
       onSuccess: () => {
+        queryClient.invalidateQueries('artists');
         toast('success', 'Artist created');
       },
     }

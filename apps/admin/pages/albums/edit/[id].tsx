@@ -60,7 +60,7 @@ const EditAlbums = () => {
 
   return (
     <Layout title="Edit Album">
-      <h2 className="mb-8">Edit Album</h2>
+      <h2 className="text-4xl mb-8">Edit Album</h2>
       <div className="mt-5 md:mt-0 md:col-span-2">
         <Form
           onSubmit={handleSubmit}

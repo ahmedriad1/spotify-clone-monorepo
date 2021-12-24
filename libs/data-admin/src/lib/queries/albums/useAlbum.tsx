@@ -4,7 +4,7 @@ import { gql } from '@spotify-clone-monorepo/utils';
 import { Album } from '../../data';
 
 const useAlbum = (id: string) => {
-  return useQuery(['album', id], async () => {
+  return useQuery(['album', id], async ({ signal }) => {
     const { album } = await axiosGql<{
       album: Omit<Omit<Album, '_count'>, 'likesCount'>;
     }>(
@@ -27,7 +27,8 @@ const useAlbum = (id: string) => {
           }
         }
       `,
-      { id }
+      { id },
+      { signal }
     );
     return album;
   });

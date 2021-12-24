@@ -2,8 +2,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import { axiosGql, IGraphQLError } from '@spotify-clone-monorepo/auth';
 import { gql } from '@spotify-clone-monorepo/utils';
 import { toast } from '@spotify-clone-monorepo/ui';
-import { Album } from '../../data';
-import { IPaginatedData } from '../../queries/createPaginatedQuery';
 
 export interface IRemoveAlbumData {
   id: string;
@@ -12,7 +10,7 @@ export interface IRemoveAlbumData {
 
 const useRemoveAlbum = () => {
   const queryClient = useQueryClient();
-  return useMutation<any, IGraphQLError, IRemoveAlbumData>(
+  return useMutation<unknown, IGraphQLError, IRemoveAlbumData>(
     async ({ id }) => {
       const { removeAlbum } = await axiosGql<{
         removeAlbum: { id: string; name: string };
@@ -30,18 +28,9 @@ const useRemoveAlbum = () => {
       return removeAlbum;
     },
     {
-      onSuccess: (_, variables) => {
+      onSuccess: () => {
+        queryClient.invalidateQueries('albums');
         toast('success', 'Album deleted');
-        queryClient.setQueryData<IPaginatedData<Album[]> | undefined>(
-          ['albums', variables.page],
-          (data) => {
-            if (!data) return;
-            return {
-              total: data.total - 1,
-              all: data.all.filter((album) => album.id !== variables.id),
-            };
-          }
-        );
       },
     }
   );

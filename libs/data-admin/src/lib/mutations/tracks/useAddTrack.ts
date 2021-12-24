@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useState } from 'react';
 import { axiosGql, IGraphQLError } from '@spotify-clone-monorepo/auth';
 import { gql } from '@spotify-clone-monorepo/utils';
@@ -14,6 +14,8 @@ export interface IAddTrackData {
 
 const useAddTrack = () => {
   const [completed, setCompleted] = useState<number | null>(null);
+  const queryClient = useQueryClient();
+
   const data = useMutation<unknown, IGraphQLError, IAddTrackData>(
     ({ trackFile, ...rest }) =>
       axiosGql(
@@ -34,6 +36,7 @@ const useAddTrack = () => {
       ),
     {
       onSuccess: () => {
+        queryClient.invalidateQueries('tracks');
         toast('success', 'Track created');
       },
     }

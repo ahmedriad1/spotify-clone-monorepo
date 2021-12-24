@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { axiosGql, IGraphQLError } from '@spotify-clone-monorepo/auth';
 import { gql } from '@spotify-clone-monorepo/utils';
 import { toast } from '@spotify-clone-monorepo/ui';
@@ -8,12 +8,14 @@ export interface IUpdateAlbumData {
   name: string;
   description: string;
   genre: { id: string };
-  image?: any;
+  image?: File;
   artists?: { id: string }[];
 }
 
 const useUpdateAlbum = () => {
-  return useMutation<any, IGraphQLError, IUpdateAlbumData>(
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, IGraphQLError, IUpdateAlbumData>(
     async ({ id, image, ...data }) => {
       const { updateAlbum } = await axiosGql<{
         updateAlbum: { id: string; name: string };
@@ -36,6 +38,7 @@ const useUpdateAlbum = () => {
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries('albums');
         toast('success', 'Album updated');
       },
     }

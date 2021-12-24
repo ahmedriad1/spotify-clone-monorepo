@@ -16,7 +16,7 @@ const createPaginatedQuery = <T>(options: IOptions, query: string) => {
   const firstCapitalized =
     options.queryName[0].toUpperCase() + options.queryName.slice(1);
   return (page = 1, limit = 10): UseQueryResult<IPaginatedData<T>> => {
-    return useQuery([options.cacheName, page], async () => {
+    return useQuery([options.cacheName, page], async ({ signal }) => {
       const data = await axiosGql<{ [key: string]: T | number }>(
         gql`
           query ${options.queryName}($page: Int!, $limit: Int!) {
@@ -26,7 +26,8 @@ const createPaginatedQuery = <T>(options: IOptions, query: string) => {
             total${firstCapitalized}
           }
         `,
-        { page, limit }
+        { page, limit },
+        { signal }
       );
       return {
         all: data[options.queryName] as T,
