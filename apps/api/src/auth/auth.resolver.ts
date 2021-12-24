@@ -7,7 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { GraphQLContext } from '../types';
+
 import {
   RefreshTokenInput,
   UserCreateInput,
@@ -15,6 +15,7 @@ import {
 } from '../user/dto';
 import { AuthenticatedUserModel } from '../user/models/user.model';
 import { UserService } from '../user/user.service';
+import { GraphQLContext } from '../utils/gql-config.service';
 import { AuthService } from './auth.service';
 
 @Resolver(() => AuthenticatedUserModel)

@@ -1,9 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import {
-  AppConfigService as _AppEnvironment,
-  graphqlModuleFactory,
-} from '../environments/app.environment';
+import { AppConfigService as _AppEnvironment } from '../environments/app.environment';
 import { PassportUserFields as _PassportUserFields } from '../auth';
 
 export type Await<T> = T extends {
@@ -11,10 +8,6 @@ export type Await<T> = T extends {
 }
   ? U
   : T;
-
-export type GraphQLContext = ReturnType<
-  Await<ReturnType<typeof graphqlModuleFactory>>['context']
->;
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
