@@ -17,27 +17,27 @@ const Album = () => {
   const { data: liked } = useIsAlbumLiked(id as string);
   const likeMutation = useLikeAlbumMutation();
 
-  const { currentSong, isPlaying, pause, resume, setQueue } = usePlayerStore(
-    (state) => ({
-      currentSong: state.currentSong,
-      isPlaying: state.isPlaying,
-      pause: state.pause,
-      resume: state.resume,
-      setQueue: state.setQueue,
-    }),
-    shallow
-  );
+  // const { currentSong, isPlaying, pause, resume, setQueue } = usePlayerStore(
+  //   (state) => ({
+  //     currentSong: state.currentSong,
+  //     isPlaying: state.isPlaying,
+  //     pause: state.pause,
+  //     resume: state.resume,
+  //     setQueue: state.setQueue,
+  //   }),
+  //   shallow
+  // );
 
-  const playSong = (track) => {
-    const { tracks } = data;
-    if (!currentSong || currentSong !== track.id)
-      return setQueue({
-        tracks: tracks.map((t) => t.id),
-        currentSong: track.id,
-      });
-    if (isPlaying) return pause();
-    return resume();
-  };
+  // const playSong = (track) => {
+  //   const { tracks } = data;
+  //   if (!currentSong || currentSong !== track.id)
+  //     return setQueue({
+  //       tracks: tracks.map((t) => t.id),
+  //       currentSong: track.id,
+  //     });
+  //   if (isPlaying) return pause();
+  //   return resume();
+  // };
 
   return (
     <Layout
@@ -56,9 +56,10 @@ const Album = () => {
         <SingleItem
           type={data.type}
           info={data}
+          color={data.image.color}
           isLiked={liked}
           onLike={() => likeMutation.mutate(data.id)}
-          onSongClick={playSong}
+          // onSongClick={playSong}
         />
       )}
     </Layout>

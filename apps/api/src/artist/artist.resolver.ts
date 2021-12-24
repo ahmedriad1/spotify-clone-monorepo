@@ -39,6 +39,12 @@ export class ArtistResolver {
       id: true,
       imageId: true,
     },
+    Album: {
+      image: true,
+    },
+    AlbumImage: {
+      cloudinaryId: true,
+    },
   };
 
   @Query(() => [Artist])

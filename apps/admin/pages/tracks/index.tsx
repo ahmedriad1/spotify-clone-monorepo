@@ -40,7 +40,7 @@ const columns: Column<Track>[] = [
     accessor: 'artists',
     Cell: ({ value, row: { original } }) => (
       <>
-        {[...original.album.artists, ...value].map((artist) => (
+        {(value.length ? value : original.album.artists).map((artist) => (
           <Link href={`/artists/${artist.id}`} key={artist.id}>
             <a className="text-[rgba(255,255,255,0.6)] hover:text-white">
               {artist.name}
